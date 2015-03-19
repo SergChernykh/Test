@@ -1,0 +1,10 @@
+E:\Projects\win2\win2\bin\Debug\win2.exe.config
+E:\Projects\win2\win2\bin\Debug\win2.exe
+E:\Projects\win2\win2\bin\Debug\win2.pdb
+E:\Projects\win2\win2\obj\Debug\win2.csprojResolveAssemblyReference.cache
+E:\Projects\win2\win2\obj\Debug\win2.Form1.resources
+E:\Projects\win2\win2\obj\Debug\win2.Properties.Resources.resources
+E:\Projects\win2\win2\obj\Debug\win2.csproj.GenerateResource.Cache
+E:\Projects\win2\win2\obj\Debug\win2.exe
+E:\Projects\win2\win2\obj\Debug\win2.pdb
+E:\Projects\win2\win2\obj\Debug\win2.EditOfElement.resources
