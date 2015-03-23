@@ -94,7 +94,7 @@ namespace CircuitCalculation
 
             for (int i = 0; i < this.dataGridViewFreq.RowCount; i++)
             {
-                this.dataGridViewFreq[1, i].Value = z[i];
+                this.dataGridViewFreq[2, i].Value = z[i];
             }
         }
 
@@ -107,7 +107,7 @@ namespace CircuitCalculation
                 try
                 {
                     frequencies[i] = Convert.ToDouble(this.dataGridViewFreq[0, i].Value) *
-                        Multiplier.GetMultiPlier((PrefixType)Enum.Parse(typeof(PrefixType), this.dataGridViewFreq[1, i].Value.ToString())); ;
+                        Multiplier.GetMultiPlier((PrefixType)Enum.Parse(typeof(PrefixType), this.dataGridViewFreq[1, i].Value.ToString()));
                 }
                 catch (FormatException)
                 {
