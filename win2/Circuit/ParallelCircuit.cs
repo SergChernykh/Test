@@ -7,6 +7,7 @@ using System.Numerics;
 
 using CircuitCalculation.Elements;
 
+
 namespace CircuitCalculation
 {
     /// <summary>
@@ -14,9 +15,8 @@ namespace CircuitCalculation
     /// </summary>
     class ParallelCircuit : ICircuit
     {
-        public List<IElement> Elements {get; set;}
-
-        public List<ICircuit> SubCircuits { get; set; }
+       
+        public EventDrivenList<ICircuit> SubCircuits { get; set; }
 
         public ICircuit ParentCircuit { get; set; }
 
@@ -24,29 +24,32 @@ namespace CircuitCalculation
 
         public ParallelCircuit(ICircuit circuit)
         {
-            Elements = new List<IElement>();
-            SubCircuits = new List<ICircuit>();
+            SubCircuits = new EventDrivenList<ICircuit>();
+            SubCircuits.ItemAdded += SubCircuits_ItemChanged;
+            SubCircuits.ItemRemoved += SubCircuits_ItemChanged;
             ParentCircuit = circuit;
+        }
+
+        private void SubCircuits_ItemChanged(object sender, EventArgs e)
+        {
+            if (CircuitChanged != null)
+            {
+                CircuitChanged(this, null);
+            }
         }
 
         public Complex[] CalculateZ(double[] frequencies)
         {
             Complex[] z = new Complex[frequencies.Length];
-            Complex[] zSub = new Complex[frequencies.Length];
             for (int i = 0; i < frequencies.Length; i++)
             {
                 z[i] = 0;
-                foreach (IElement element in Elements)
-                {
-                    z[i] += 1 / element.CalculateZ(frequencies[i]);
-                }
             }
             foreach (ICircuit circuit in SubCircuits)
             {
-                zSub = circuit.CalculateZ(frequencies);
                 for (int i = 0; i < frequencies.Length; i++)
                 {    
-                    z[i] += 1 / zSub[i];
+                    z[i] += 1 / circuit.CalculateZ(frequencies)[i];
                 }
             }
             for (int i = 0; i < frequencies.Length; i++)
@@ -56,43 +59,6 @@ namespace CircuitCalculation
             return z;
         }
 
-        public void AddElement(IElement element, int index)
-        {
-            try
-            {
-                Elements.RemoveAt(index);
-                Elements.Insert(index, element);
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                Elements.Add(element);
-
-            }
-
-            Elements[index].ValueChanged += new EventHandler(Element_ValueChanged);
-            if (CircuitChanged != null)
-            {
-                CircuitChanged(this, null);   //при добавлении элемента зажигается событие 
-            }
-        }
-
-        public void RemoveElement(int index)
-        {
-            this.Elements.RemoveAt(index);
-            if (CircuitChanged != null)
-            {
-                CircuitChanged(this, null);
-            }
-        }
-
         
-
-        private void Element_ValueChanged(object sender, EventArgs e)
-        {
-            if (CircuitChanged != null)
-            {
-                CircuitChanged(this, null);   //при изменении элемента зажигается событие 
-            }
-        }
     }
 }

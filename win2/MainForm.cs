@@ -12,23 +12,44 @@ using System.Numerics;
 
 using CircuitCalculation.Elements;
 
-
-
-
-
-
-
-
 namespace CircuitCalculation
 {
+    
     public partial class MainForm : Form
     {
+        /// <summary>
+        /// 0 - резистор, 1 - конденсатор, 2 - катушка
+        /// </summary>
+        readonly string[] Elements = { "Резистор",
+                                  "Конденсатор",
+                                  "Катушка"};
+
+        /// <summary>
+        /// 0 - последовательное, 1 - параллельное
+        /// </summary>
+        readonly string[] Circuits = { "Последовательное", 
+                                  "Параллельное"};
+
+        private readonly Dictionary<PrefixType, string> Prefix;
+
         private ICircuit Circuit;
         private ICircuit SelectedCircuit;
         private double[] frequencies;
         public MainForm()
         {
             InitializeComponent();
+            Prefix = new Dictionary<PrefixType, string>();
+            Prefix.Add(PrefixType.Giga, "Giga");
+            Prefix.Add(PrefixType.Mega, "Mega");
+            Prefix.Add(PrefixType.Kilo, "Kilo");
+            Prefix.Add(PrefixType.Not, "Not");
+            Prefix.Add(PrefixType.Mili, "Mili");
+            Prefix.Add(PrefixType.Micro, "Micro");
+            Prefix.Add(PrefixType.Nano, "Nano");
+            foreach (string str in Prefix.Values)
+            {
+                this.ColumnPrefix.Items.Add(str);
+            }
         }
 
         
@@ -64,11 +85,7 @@ namespace CircuitCalculation
             }
             
         }
-        
 
-        
-            
-        
         private void Calculate()
         {
             Complex[] z = new Complex[frequencies.Length];
@@ -89,7 +106,8 @@ namespace CircuitCalculation
             {
                 try
                 {
-                    frequencies[i] = Convert.ToDouble(this.dataGridViewFreq[0, i].Value);
+                    frequencies[i] = Convert.ToDouble(this.dataGridViewFreq[0, i].Value) *
+                        Multiplier.GetMultiPlier((PrefixType)Enum.Parse(typeof(PrefixType), this.dataGridViewFreq[1, i].Value.ToString())); ;
                 }
                 catch (FormatException)
                 {
@@ -100,6 +118,7 @@ namespace CircuitCalculation
             Calculate();
         }
 
+        
         private void treeViewCircuit_AfterSelect(object sender, TreeViewEventArgs e)
         {
 
@@ -118,6 +137,19 @@ namespace CircuitCalculation
                     SelectedCircuit = SelectedCircuit.SubCircuits[path[i]];
                 }
             }
+            if (SelectedCircuit is IElement)
+            {
+                this.EditOfElementToolStripMenuItem.Enabled = true;
+                this.AddToolStripMenuItem.Enabled = false;
+                this.ChangeConectionToolStripMenuItem.Enabled = false;
+            }
+            else
+            {
+                this.EditOfElementToolStripMenuItem.Enabled = false;
+                this.AddToolStripMenuItem.Enabled = true;
+                this.ChangeConectionToolStripMenuItem.Enabled = true;
+            }
+            
         }
 
         
@@ -129,7 +161,7 @@ namespace CircuitCalculation
             {
                 this.treeViewCircuit.Nodes.Remove(this.treeViewCircuit.Nodes[0]);
             }
-            TreeNode node = new TreeNode("Параллельное");
+            TreeNode node = new TreeNode(Circuits[1]);
             node.ContextMenuStrip = this.contextMenuStripEditConnection;
             this.treeViewCircuit.Nodes.Add(node);
 
@@ -143,7 +175,7 @@ namespace CircuitCalculation
             {
                 this.treeViewCircuit.Nodes.Remove(this.treeViewCircuit.Nodes[0]);
             }
-            TreeNode node = new TreeNode("Последовательное");
+            TreeNode node = new TreeNode(Circuits[0]);
             node.ContextMenuStrip = this.contextMenuStripEditConnection;
             this.treeViewCircuit.Nodes.Add(node);
 
@@ -155,22 +187,42 @@ namespace CircuitCalculation
         #region Редактирование цепи
         private void ChangeToParallelToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.treeViewCircuit.SelectedNode.Text = "Параллельное";
-            //ParallelCircuit newCircuit = new ParallelCircuit(SelectedCircuit.ParentCircuit);
-            //newCircuit.Elements = SelectedCircuit.Elements;
-            //newCircuit.SubCircuits = SelectedCircuit.SubCircuits;
+            this.treeViewCircuit.SelectedNode.Text = Circuits[1];
+            ParallelCircuit newCircuit;
+            if (SelectedCircuit.ParentCircuit == null)
+            {
+                newCircuit = new ParallelCircuit(null);
+            }
+            else
+            {
+                newCircuit = new ParallelCircuit(SelectedCircuit.ParentCircuit);
+                SelectedCircuit.ParentCircuit.SubCircuits.Add(newCircuit);
+            }
+            newCircuit.SubCircuits = SelectedCircuit.SubCircuits;
+            newCircuit.CircuitChanged += Circuit_CircuitChanged;
             
-            //this.Circuit.SelectedNode.ChangeToType(new ParallelCircuit());
+            SelectedCircuit = newCircuit;
         }
 
         private void ChangeToSeriesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.treeViewCircuit.SelectedNode.Text = "Последовательное";
-            //SeriesCircuit newCircuit = new SeriesCircuit(SelectedCircuit.ParentCircuit);
-            //newCircuit.Elements = SelectedCircuit.Elements;
-            //newCircuit.SubCircuits = SelectedCircuit.SubCircuits;
-            //SelectedCircuit = newCircuit;
-            //this.Circuit.SelectedNode.ChangeToType(new SeriesCircuit());
+            this.treeViewCircuit.SelectedNode.Text = Circuits[0];
+            SeriesCircuit newCircuit;
+            if (SelectedCircuit.ParentCircuit == null)
+            {
+                newCircuit = new SeriesCircuit(null);
+            }
+            else
+            {
+                newCircuit = new SeriesCircuit(SelectedCircuit.ParentCircuit);
+                SelectedCircuit.ParentCircuit.SubCircuits.Add(newCircuit);
+            }
+            newCircuit.SubCircuits = SelectedCircuit.SubCircuits;
+            newCircuit.CircuitChanged += Circuit_CircuitChanged;
+            
+            SelectedCircuit = newCircuit;
+            
+            
         }
 
         private void DeleteConectionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -183,29 +235,16 @@ namespace CircuitCalculation
             
         }
 
-        private void AddElementsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void EditOfElementToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            EditOfElement edit = new EditOfElement(SelectedCircuit);
+            EditOfElement edit = new EditOfElement((IElement)SelectedCircuit);
             edit.ShowDialog();
         }
 
-        private void AddParallelToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-
-            TreeNode node = new TreeNode();
-            node.Text = "Параллельное";
-            node.ContextMenuStrip = contextMenuStripEditConnection;
-            this.treeViewCircuit.SelectedNode.Nodes.Add(node);
-
-            ParallelCircuit newCircuit = new ParallelCircuit(SelectedCircuit);
-            newCircuit.CircuitChanged +=new EventHandler(Circuit_CircuitChanged);
-            SelectedCircuit.SubCircuits.Add(newCircuit);
-        }
-
-        private void AddSeriesToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void AddSeriesCircuitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TreeNode node = new TreeNode();
-            node.Text = "Последовательное";
+            node.Text = Circuits[0];
             node.ContextMenuStrip = contextMenuStripEditConnection;
             this.treeViewCircuit.SelectedNode.Nodes.Add(node);
 
@@ -213,35 +252,61 @@ namespace CircuitCalculation
             newCircuit.CircuitChanged += new EventHandler(Circuit_CircuitChanged);
             SelectedCircuit.SubCircuits.Add(newCircuit);
         }
-        #endregion
 
-        private Image GetImageElement(IElement element)
+        private void AddParallelCircuitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Image imageElement;
-            if (element is Capacitor)
-            {
-                imageElement = global::CircuitCalculation.Properties.Resources.Capacitor;
-            }
-            else if (element is Resistor)
-            {
-                imageElement = global::CircuitCalculation.Properties.Resources.Resistor;
-            }
-            else if (element is Inductor)
-            {
-                imageElement = global::CircuitCalculation.Properties.Resources.Inductor;
-            }
-            else
-            {
-                throw new ArgumentException();
-            }
+            TreeNode node = new TreeNode();
+            node.Text = Circuits[1];
+            node.ContextMenuStrip = contextMenuStripEditConnection;
+            this.treeViewCircuit.SelectedNode.Nodes.Add(node);
 
-            return imageElement;
-
+            ParallelCircuit newCircuit = new ParallelCircuit(SelectedCircuit);
+            newCircuit.CircuitChanged += new EventHandler(Circuit_CircuitChanged);
+            SelectedCircuit.SubCircuits.Add(newCircuit);
         }
 
-        
+        private void AddResistorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TreeNode node = new TreeNode();
+            node.Text = Elements[0];
+            node.ContextMenuStrip = contextMenuStripEditConnection;
+            this.treeViewCircuit.SelectedNode.Nodes.Add(node);
+
+            Resistor newElement = new Resistor(SelectedCircuit);
+            newElement.CircuitChanged += new EventHandler(Circuit_CircuitChanged);
+            SelectedCircuit.SubCircuits.Add(newElement);
+        }
+
+        private void AddCapacitorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TreeNode node = new TreeNode();
+            node.Text = Elements[1];
+            node.ContextMenuStrip = contextMenuStripEditConnection;
+            this.treeViewCircuit.SelectedNode.Nodes.Add(node);
+
+            Capacitor newElement = new Capacitor(SelectedCircuit);
+            newElement.CircuitChanged += new EventHandler(Circuit_CircuitChanged);
+            SelectedCircuit.SubCircuits.Add(newElement);
+        }
+
+        private void AddInductorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TreeNode node = new TreeNode();
+            node.Text = Elements[2];
+            node.ContextMenuStrip = contextMenuStripEditConnection;
+            this.treeViewCircuit.SelectedNode.Nodes.Add(node);
+
+            Inductor newElement = new Inductor(SelectedCircuit);
+            newElement.CircuitChanged += new EventHandler(Circuit_CircuitChanged);
+            SelectedCircuit.SubCircuits.Add(newElement);
+        }
+
+        #endregion
+
+        #region Отрисовка цепи
         private void pictureBoxCircuit_Paint(object sender, PaintEventArgs e)
         {
+            
             //if (this.Circuit.Elements.Count != 0)
             //{
             //    Point pointBegin = new Point(0, this.pictureBoxCircuit.Height / 2);
@@ -284,8 +349,13 @@ namespace CircuitCalculation
             //        }
             //    }
             //}
-            
+
         }
+        #endregion
+
+        
+
+        
         
 
     }

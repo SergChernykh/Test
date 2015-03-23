@@ -10,10 +10,12 @@ namespace CircuitCalculation.Elements
     /// <summary>
     /// Катушка индуктивности
     /// </summary>
-    public class Inductor : IElement
+    public class Inductor : IElement, ICircuit
     {
         string _name;
         double _value;
+        System.Drawing.Image _imageOfElement;
+
         public string Name
         {
             get { return _name; }
@@ -27,9 +29,9 @@ namespace CircuitCalculation.Elements
                 if (value > 0)
                 {
                     _value = value;
-                    if (ValueChanged != null)
+                    if (CircuitChanged != null)
                     {
-                        ValueChanged(this, null);
+                        CircuitChanged(this, null);
                     }
                 }
                 else
@@ -39,24 +41,34 @@ namespace CircuitCalculation.Elements
 
             }
         }
-        public Complex CalculateZ(double frequency)
+
+
+        public Inductor(ICircuit circuit)
         {
-            return new Complex(0, 2 * 3.14 * frequency * Value * Math.Pow(10, -3));
+            ParentCircuit = circuit;
+            _imageOfElement = global::CircuitCalculation.Properties.Resources.Inductor;
         }
-        public event EventHandler ValueChanged;
-
-
         public Complex[] CalculateZ(double[] frequencies)
         {
             Complex[] z = new Complex[frequencies.Length];
             for (int i = 0; i < frequencies.Length; i++)
             {
-                z[i] = new Complex(0, 2 * Math.PI * frequencies[i] * Value * Math.Pow(10, -3));
+                z[i] = new Complex(0, 2 * Math.PI * frequencies[i] * Value);
             }
             return z;
             
         }
 
-        
+        public ICircuit ParentCircuit { get; set; }
+
+        public EventDrivenList<ICircuit> SubCircuits { get { return null; } }
+
+        public event EventHandler CircuitChanged;
+
+
+        public System.Drawing.Image GetImageOfElement()
+        {
+            return _imageOfElement;
+        }
     }
 }

@@ -3,36 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Numerics;
+using System.Drawing;
 
-
-namespace CircuitCalculation.Elements
+namespace CircuitCalculation
 {
     /// <summary>
-    /// Элемент эквивалентной схемы.
+    /// Элемент схемы
     /// </summary>
     public interface IElement
     {
         /// <summary>
-        /// Имя элемента.
+        /// Имя элемента
         /// </summary>
         string Name { get; set; }
 
         /// <summary>
-        /// Номинал элемента.
+        /// Номинал элемента в СИ
         /// </summary>
         double Value { get; set; }
 
-        /// <summary>
-        /// Рассчитать значение импеданса для элемента на заданной частоте.
-        /// </summary>
-        /// <param name="frequency">Расчетная частота.</param>
-        /// <returns>Расситанное значение импеданса.</returns>
-        Complex CalculateZ(double frequency);
+        event EventHandler CircuitChanged;
 
         /// <summary>
-        /// Событие, срабатывающее при изменении элемента
+        /// Получить изображение элемента
         /// </summary>
-        event EventHandler ValueChanged;
+        /// <returns>Изображение элемента</returns>
+        Image GetImageOfElement();
     }
 }

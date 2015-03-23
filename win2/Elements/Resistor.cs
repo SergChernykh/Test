@@ -10,10 +10,11 @@ namespace CircuitCalculation.Elements
     /// <summary>
     /// Резистор
     /// </summary>
-    public class Resistor : IElement
+    public class Resistor : IElement, ICircuit
     {
         string _name;
         double _value;
+        System.Drawing.Image _imageOfElement;
 
         public string Name
         {
@@ -28,9 +29,9 @@ namespace CircuitCalculation.Elements
                 if (value > 0)
                 {
                     _value = value;
-                    if (ValueChanged != null)
+                    if (CircuitChanged != null)
                     {
-                        ValueChanged(this, null);  //при изменении значения значения зажигается событие
+                        CircuitChanged(this, null);  
                     }
                 }
                 else
@@ -41,12 +42,12 @@ namespace CircuitCalculation.Elements
 
             }
         }
-        public Complex CalculateZ(double frequency)
-        {
-            return new Complex(Value, 0);
-        }
-        public event EventHandler ValueChanged;
 
+        public Resistor(ICircuit circuit)
+        {
+            ParentCircuit = circuit;
+            _imageOfElement = global::CircuitCalculation.Properties.Resources.Resistor;
+        }
 
         public Complex[] CalculateZ(double[] frequencies)
         {
@@ -58,6 +59,22 @@ namespace CircuitCalculation.Elements
             return z;
         }
 
+
+        public ICircuit ParentCircuit { get; set; }
+
+
+        public EventDrivenList<ICircuit> SubCircuits { get { return null; } }
         
+
+        public event EventHandler CircuitChanged;
+
+
+
+
+
+        public System.Drawing.Image GetImageOfElement()
+        {
+            return _imageOfElement;
+        }
     }
 }

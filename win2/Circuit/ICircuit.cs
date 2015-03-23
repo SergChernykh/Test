@@ -15,11 +15,6 @@ namespace CircuitCalculation
     public interface ICircuit
     {
         /// <summary>
-        /// Элементы цепи
-        /// </summary>
-        List<IElement> Elements { get; set; }
-
-        /// <summary>
         /// Родительская цепь
         /// </summary>
         ICircuit ParentCircuit { get; set; }
@@ -27,7 +22,7 @@ namespace CircuitCalculation
         /// <summary>
         /// Соединения, входящие в текущую цепь
         /// </summary>
-        List<ICircuit> SubCircuits { get; set; }
+        EventDrivenList<ICircuit> SubCircuits { get; }
 
         /// <summary>
         /// Расчитать импеданс цепи на заданных частотах
@@ -35,20 +30,6 @@ namespace CircuitCalculation
         /// <param name="frequencies">Список частот</param>
         /// <returns>Расчитанное значение импеданса</returns>
         Complex[] CalculateZ(double[] frequencies);
-
-        /// <summary>
-        /// Добавить элемент по указанному индексу
-        /// </summary>
-        /// <param name="element">Элемент схемы</param>
-        /// <param name="index">Индекс</param>
-        void AddElement(IElement element, int index);
-
-        /// <summary>
-        /// Удалить элемент по заданному индексу
-        /// </summary>
-        /// <param name="index">Индекс</param>
-        void RemoveElement(int index);
-
 
         /// <summary>
         /// Зажигается при измененииях в цепи

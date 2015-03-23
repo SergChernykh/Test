@@ -28,57 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.dataGridViewElements = new System.Windows.Forms.DataGridView();
-            this.ColumnTypeElement = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.ColumnName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.buttonAllDelete = new System.Windows.Forms.Button();
-            this.buttonAdd = new System.Windows.Forms.Button();
-            this.buttonDelete = new System.Windows.Forms.Button();
-            this.numericUpDownSelection = new System.Windows.Forms.NumericUpDown();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewElements)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSelection)).BeginInit();
+            this.textBoxNameOfElement = new System.Windows.Forms.TextBox();
+            this.textBoxValueOfElement = new System.Windows.Forms.TextBox();
+            this.comboBoxPrefix = new System.Windows.Forms.ComboBox();
+            this.labelNameOfElement = new System.Windows.Forms.Label();
+            this.labelValueOfElement = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            // 
-            // dataGridViewElements
-            // 
-            this.dataGridViewElements.AllowUserToAddRows = false;
-            this.dataGridViewElements.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewElements.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.ColumnTypeElement,
-            this.ColumnName,
-            this.ColumnValue});
-            this.dataGridViewElements.Location = new System.Drawing.Point(12, 12);
-            this.dataGridViewElements.Name = "dataGridViewElements";
-            this.dataGridViewElements.RowHeadersVisible = false;
-            this.dataGridViewElements.Size = new System.Drawing.Size(324, 210);
-            this.dataGridViewElements.TabIndex = 0;
-            // 
-            // ColumnTypeElement
-            // 
-            this.ColumnTypeElement.HeaderText = "Тип элемента";
-            this.ColumnTypeElement.Items.AddRange(new object[] {
-            "Конденсатор, нФ",
-            "Катушка, мкГн",
-            "Резистор, Ом"});
-            this.ColumnTypeElement.Name = "ColumnTypeElement";
-            this.ColumnTypeElement.Width = 120;
-            // 
-            // ColumnName
-            // 
-            this.ColumnName.HeaderText = "Имя элемента";
-            this.ColumnName.Name = "ColumnName";
-            // 
-            // ColumnValue
-            // 
-            this.ColumnValue.HeaderText = "Номинал элемента";
-            this.ColumnValue.Name = "ColumnValue";
             // 
             // buttonOK
             // 
-            this.buttonOK.Location = new System.Drawing.Point(391, 157);
+            this.buttonOK.Location = new System.Drawing.Point(383, 14);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 3;
@@ -88,7 +49,7 @@
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Location = new System.Drawing.Point(391, 199);
+            this.buttonCancel.Location = new System.Drawing.Point(383, 56);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 4;
@@ -96,83 +57,78 @@
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
-            // buttonAllDelete
+            // textBoxNameOfElement
             // 
-            this.buttonAllDelete.Location = new System.Drawing.Point(370, 117);
-            this.buttonAllDelete.Name = "buttonAllDelete";
-            this.buttonAllDelete.Size = new System.Drawing.Size(118, 23);
-            this.buttonAllDelete.TabIndex = 5;
-            this.buttonAllDelete.Text = "Очистить список";
-            this.buttonAllDelete.UseVisualStyleBackColor = true;
-            this.buttonAllDelete.Click += new System.EventHandler(this.buttonAllDelete_Click);
+            this.textBoxNameOfElement.Location = new System.Drawing.Point(143, 17);
+            this.textBoxNameOfElement.Name = "textBoxNameOfElement";
+            this.textBoxNameOfElement.Size = new System.Drawing.Size(118, 20);
+            this.textBoxNameOfElement.TabIndex = 10;
             // 
-            // buttonAdd
+            // textBoxValueOfElement
             // 
-            this.buttonAdd.Location = new System.Drawing.Point(370, 27);
-            this.buttonAdd.Name = "buttonAdd";
-            this.buttonAdd.Size = new System.Drawing.Size(118, 23);
-            this.buttonAdd.TabIndex = 6;
-            this.buttonAdd.Text = "Добавить элемент";
-            this.buttonAdd.UseVisualStyleBackColor = true;
-            this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
+            this.textBoxValueOfElement.Location = new System.Drawing.Point(143, 59);
+            this.textBoxValueOfElement.Name = "textBoxValueOfElement";
+            this.textBoxValueOfElement.Size = new System.Drawing.Size(118, 20);
+            this.textBoxValueOfElement.TabIndex = 11;
+            this.textBoxValueOfElement.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxValueOfElement_KeyPress);
             // 
-            // buttonDelete
+            // comboBoxPrefix
             // 
-            this.buttonDelete.Location = new System.Drawing.Point(370, 68);
-            this.buttonDelete.Name = "buttonDelete";
-            this.buttonDelete.Size = new System.Drawing.Size(118, 23);
-            this.buttonDelete.TabIndex = 7;
-            this.buttonDelete.Text = "Удалить элемент";
-            this.buttonDelete.UseVisualStyleBackColor = true;
-            this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
+            this.comboBoxPrefix.FormattingEnabled = true;
+            this.comboBoxPrefix.Location = new System.Drawing.Point(285, 59);
+            this.comboBoxPrefix.Name = "comboBoxPrefix";
+            this.comboBoxPrefix.Size = new System.Drawing.Size(64, 21);
+            this.comboBoxPrefix.TabIndex = 12;
             // 
-            // numericUpDownSelection
+            // labelNameOfElement
             // 
-            this.numericUpDownSelection.Location = new System.Drawing.Point(498, 71);
-            this.numericUpDownSelection.Maximum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.numericUpDownSelection.Name = "numericUpDownSelection";
-            this.numericUpDownSelection.Size = new System.Drawing.Size(35, 20);
-            this.numericUpDownSelection.TabIndex = 8;
+            this.labelNameOfElement.AutoSize = true;
+            this.labelNameOfElement.Location = new System.Drawing.Point(22, 20);
+            this.labelNameOfElement.Name = "labelNameOfElement";
+            this.labelNameOfElement.Size = new System.Drawing.Size(81, 13);
+            this.labelNameOfElement.TabIndex = 14;
+            this.labelNameOfElement.Text = "Имя элемента";
+            // 
+            // labelValueOfElement
+            // 
+            this.labelValueOfElement.AutoSize = true;
+            this.labelValueOfElement.Location = new System.Drawing.Point(22, 62);
+            this.labelValueOfElement.Name = "labelValueOfElement";
+            this.labelValueOfElement.Size = new System.Drawing.Size(105, 13);
+            this.labelValueOfElement.TabIndex = 15;
+            this.labelValueOfElement.Text = "Номинал элемента";
             // 
             // EditOfElement
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(554, 244);
-            this.Controls.Add(this.numericUpDownSelection);
-            this.Controls.Add(this.buttonDelete);
-            this.Controls.Add(this.buttonAdd);
-            this.Controls.Add(this.buttonAllDelete);
+            this.ClientSize = new System.Drawing.Size(487, 100);
+            this.Controls.Add(this.labelValueOfElement);
+            this.Controls.Add(this.labelNameOfElement);
+            this.Controls.Add(this.comboBoxPrefix);
+            this.Controls.Add(this.textBoxValueOfElement);
+            this.Controls.Add(this.textBoxNameOfElement);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
-            this.Controls.Add(this.dataGridViewElements);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "EditOfElement";
-            this.Text = "Список элементов";
+            this.Text = "Элемент";
             this.Load += new System.EventHandler(this.EditOfElement_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewElements)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSelection)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.DataGridView dataGridViewElements;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.Button buttonAllDelete;
-        private System.Windows.Forms.Button buttonAdd;
-        private System.Windows.Forms.Button buttonDelete;
-        private System.Windows.Forms.NumericUpDown numericUpDownSelection;
-        private System.Windows.Forms.DataGridViewComboBoxColumn ColumnTypeElement;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnValue;
+        private System.Windows.Forms.TextBox textBoxNameOfElement;
+        private System.Windows.Forms.TextBox textBoxValueOfElement;
+        private System.Windows.Forms.ComboBox comboBoxPrefix;
+        private System.Windows.Forms.Label labelNameOfElement;
+        private System.Windows.Forms.Label labelValueOfElement;
 
     }
 }

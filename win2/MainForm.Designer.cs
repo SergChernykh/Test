@@ -20,6 +20,7 @@
             base.Dispose(disposing);
         }
 
+
         #region Код, автоматически созданный конструктором форм Windows
 
         /// <summary>
@@ -34,23 +35,28 @@
             this.ChangeToParallelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ChangeToSeriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DeleteConectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.AddElementsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.AddConectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.AddParallelToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.AddSeriesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.AddToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.AddCircuitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.AddSeriesCircuitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.AddParallelCircuitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.AddElementToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.AddResistorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.AddCapacitorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.AddInductorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.EditOfElementToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridViewFreq = new System.Windows.Forms.DataGridView();
-            this.ColumnFrequence = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnImpedance = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonExit = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.numericUpDownFrequencies = new System.Windows.Forms.NumericUpDown();
-            this.labelError = new System.Windows.Forms.Label();
             this.pictureBoxCircuit = new System.Windows.Forms.PictureBox();
             this.treeViewCircuit = new System.Windows.Forms.TreeView();
             this.buttonNewSeriesCircuit = new System.Windows.Forms.Button();
             this.buttonNewParallelCircuit = new System.Windows.Forms.Button();
+            this.ColumnFrequence = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnPrefix = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.ColumnImpedance = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.contextMenuStripEditConnection.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewFreq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFrequencies)).BeginInit();
@@ -62,19 +68,18 @@
             this.contextMenuStripEditConnection.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ChangeConectionToolStripMenuItem,
             this.DeleteConectionToolStripMenuItem,
-            this.AddElementsToolStripMenuItem,
-            this.AddConectionToolStripMenuItem});
+            this.AddToolStripMenuItem,
+            this.EditOfElementToolStripMenuItem});
             this.contextMenuStripEditConnection.Name = "contextMenuStrip1";
-            this.contextMenuStripEditConnection.Size = new System.Drawing.Size(234, 114);
+            this.contextMenuStripEditConnection.Size = new System.Drawing.Size(238, 92);
             // 
             // ChangeConectionToolStripMenuItem
             // 
             this.ChangeConectionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ChangeToParallelToolStripMenuItem,
             this.ChangeToSeriesToolStripMenuItem});
-            this.ChangeConectionToolStripMenuItem.Enabled = false;
             this.ChangeConectionToolStripMenuItem.Name = "ChangeConectionToolStripMenuItem";
-            this.ChangeConectionToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.ChangeConectionToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
             this.ChangeConectionToolStripMenuItem.Text = "Изменить на";
             // 
             // ChangeToParallelToolStripMenuItem
@@ -94,39 +99,79 @@
             // DeleteConectionToolStripMenuItem
             // 
             this.DeleteConectionToolStripMenuItem.Name = "DeleteConectionToolStripMenuItem";
-            this.DeleteConectionToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
-            this.DeleteConectionToolStripMenuItem.Text = "Удалить соединение";
+            this.DeleteConectionToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
+            this.DeleteConectionToolStripMenuItem.Text = "Удалить соединение/элемент";
             this.DeleteConectionToolStripMenuItem.Click += new System.EventHandler(this.DeleteConectionToolStripMenuItem_Click);
             // 
-            // AddElementsToolStripMenuItem
+            // AddToolStripMenuItem
             // 
-            this.AddElementsToolStripMenuItem.Name = "AddElementsToolStripMenuItem";
-            this.AddElementsToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
-            this.AddElementsToolStripMenuItem.Text = "Добавить/Удалить элементы";
-            this.AddElementsToolStripMenuItem.Click += new System.EventHandler(this.AddElementsToolStripMenuItem_Click);
+            this.AddToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.AddCircuitToolStripMenuItem,
+            this.AddElementToolStripMenuItem});
+            this.AddToolStripMenuItem.Name = "AddToolStripMenuItem";
+            this.AddToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
+            this.AddToolStripMenuItem.Text = "Добавить";
             // 
-            // AddConectionToolStripMenuItem
+            // AddCircuitToolStripMenuItem
             // 
-            this.AddConectionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.AddParallelToolStripMenuItem1,
-            this.AddSeriesToolStripMenuItem1});
-            this.AddConectionToolStripMenuItem.Name = "AddConectionToolStripMenuItem";
-            this.AddConectionToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
-            this.AddConectionToolStripMenuItem.Text = "Добавить соединение";
+            this.AddCircuitToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.AddSeriesCircuitToolStripMenuItem,
+            this.AddParallelCircuitToolStripMenuItem});
+            this.AddCircuitToolStripMenuItem.Name = "AddCircuitToolStripMenuItem";
+            this.AddCircuitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.AddCircuitToolStripMenuItem.Text = "Соединение";
             // 
-            // AddParallelToolStripMenuItem1
+            // AddSeriesCircuitToolStripMenuItem
             // 
-            this.AddParallelToolStripMenuItem1.Name = "AddParallelToolStripMenuItem1";
-            this.AddParallelToolStripMenuItem1.Size = new System.Drawing.Size(178, 22);
-            this.AddParallelToolStripMenuItem1.Text = "Параллельное";
-            this.AddParallelToolStripMenuItem1.Click += new System.EventHandler(this.AddParallelToolStripMenuItem1_Click);
+            this.AddSeriesCircuitToolStripMenuItem.Name = "AddSeriesCircuitToolStripMenuItem";
+            this.AddSeriesCircuitToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.AddSeriesCircuitToolStripMenuItem.Text = "Последовательное";
+            this.AddSeriesCircuitToolStripMenuItem.Click += new System.EventHandler(this.AddSeriesCircuitToolStripMenuItem_Click);
             // 
-            // AddSeriesToolStripMenuItem1
+            // AddParallelCircuitToolStripMenuItem
             // 
-            this.AddSeriesToolStripMenuItem1.Name = "AddSeriesToolStripMenuItem1";
-            this.AddSeriesToolStripMenuItem1.Size = new System.Drawing.Size(178, 22);
-            this.AddSeriesToolStripMenuItem1.Text = "Последовательное";
-            this.AddSeriesToolStripMenuItem1.Click += new System.EventHandler(this.AddSeriesToolStripMenuItem1_Click);
+            this.AddParallelCircuitToolStripMenuItem.Name = "AddParallelCircuitToolStripMenuItem";
+            this.AddParallelCircuitToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.AddParallelCircuitToolStripMenuItem.Text = "Параллельное";
+            this.AddParallelCircuitToolStripMenuItem.Click += new System.EventHandler(this.AddParallelCircuitToolStripMenuItem_Click);
+            // 
+            // AddElementToolStripMenuItem
+            // 
+            this.AddElementToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.AddResistorToolStripMenuItem,
+            this.AddCapacitorToolStripMenuItem,
+            this.AddInductorToolStripMenuItem});
+            this.AddElementToolStripMenuItem.Name = "AddElementToolStripMenuItem";
+            this.AddElementToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.AddElementToolStripMenuItem.Text = "Элемент";
+            // 
+            // AddResistorToolStripMenuItem
+            // 
+            this.AddResistorToolStripMenuItem.Name = "AddResistorToolStripMenuItem";
+            this.AddResistorToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
+            this.AddResistorToolStripMenuItem.Text = "Резистор";
+            this.AddResistorToolStripMenuItem.Click += new System.EventHandler(this.AddResistorToolStripMenuItem_Click);
+            // 
+            // AddCapacitorToolStripMenuItem
+            // 
+            this.AddCapacitorToolStripMenuItem.Name = "AddCapacitorToolStripMenuItem";
+            this.AddCapacitorToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
+            this.AddCapacitorToolStripMenuItem.Text = "Конденсатор";
+            this.AddCapacitorToolStripMenuItem.Click += new System.EventHandler(this.AddCapacitorToolStripMenuItem_Click);
+            // 
+            // AddInductorToolStripMenuItem
+            // 
+            this.AddInductorToolStripMenuItem.Name = "AddInductorToolStripMenuItem";
+            this.AddInductorToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
+            this.AddInductorToolStripMenuItem.Text = "Катушка";
+            this.AddInductorToolStripMenuItem.Click += new System.EventHandler(this.AddInductorToolStripMenuItem_Click);
+            // 
+            // EditOfElementToolStripMenuItem
+            // 
+            this.EditOfElementToolStripMenuItem.Name = "EditOfElementToolStripMenuItem";
+            this.EditOfElementToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
+            this.EditOfElementToolStripMenuItem.Text = "Редактировать элемент";
+            this.EditOfElementToolStripMenuItem.Click += new System.EventHandler(this.EditOfElementToolStripMenuItem_Click);
             // 
             // dataGridViewFreq
             // 
@@ -134,24 +179,13 @@
             this.dataGridViewFreq.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewFreq.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ColumnFrequence,
+            this.ColumnPrefix,
             this.ColumnImpedance});
-            this.dataGridViewFreq.Location = new System.Drawing.Point(32, 308);
+            this.dataGridViewFreq.Location = new System.Drawing.Point(26, 308);
             this.dataGridViewFreq.Name = "dataGridViewFreq";
             this.dataGridViewFreq.RowHeadersVisible = false;
-            this.dataGridViewFreq.Size = new System.Drawing.Size(265, 247);
+            this.dataGridViewFreq.Size = new System.Drawing.Size(284, 247);
             this.dataGridViewFreq.TabIndex = 3;
-            // 
-            // ColumnFrequence
-            // 
-            this.ColumnFrequence.HeaderText = "Частота, кГц";
-            this.ColumnFrequence.Name = "ColumnFrequence";
-            // 
-            // ColumnImpedance
-            // 
-            this.ColumnImpedance.HeaderText = "Импеданс";
-            this.ColumnImpedance.Name = "ColumnImpedance";
-            this.ColumnImpedance.ReadOnly = true;
-            this.ColumnImpedance.Width = 120;
             // 
             // buttonOK
             // 
@@ -199,15 +233,6 @@
             this.numericUpDownFrequencies.TabIndex = 12;
             this.numericUpDownFrequencies.ValueChanged += new System.EventHandler(this.numericUpDownFrequencies_ValueChanged);
             // 
-            // labelError
-            // 
-            this.labelError.AutoSize = true;
-            this.labelError.ForeColor = System.Drawing.Color.Red;
-            this.labelError.Location = new System.Drawing.Point(52, 327);
-            this.labelError.Name = "labelError";
-            this.labelError.Size = new System.Drawing.Size(0, 13);
-            this.labelError.TabIndex = 13;
-            // 
             // pictureBoxCircuit
             // 
             this.pictureBoxCircuit.BackColor = System.Drawing.Color.White;
@@ -247,6 +272,24 @@
             this.buttonNewParallelCircuit.UseVisualStyleBackColor = true;
             this.buttonNewParallelCircuit.Click += new System.EventHandler(this.buttonNewParallelCircuit_Click);
             // 
+            // ColumnFrequence
+            // 
+            this.ColumnFrequence.HeaderText = "Частота";
+            this.ColumnFrequence.Name = "ColumnFrequence";
+            // 
+            // ColumnPrefix
+            // 
+            this.ColumnPrefix.HeaderText = "";
+            this.ColumnPrefix.Name = "ColumnPrefix";
+            this.ColumnPrefix.Width = 60;
+            // 
+            // ColumnImpedance
+            // 
+            this.ColumnImpedance.HeaderText = "Импеданс";
+            this.ColumnImpedance.Name = "ColumnImpedance";
+            this.ColumnImpedance.ReadOnly = true;
+            this.ColumnImpedance.Width = 120;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -255,7 +298,6 @@
             this.Controls.Add(this.buttonNewParallelCircuit);
             this.Controls.Add(this.buttonNewSeriesCircuit);
             this.Controls.Add(this.treeViewCircuit);
-            this.Controls.Add(this.labelError);
             this.Controls.Add(this.numericUpDownFrequencies);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -284,22 +326,27 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown numericUpDownFrequencies;
-        private System.Windows.Forms.Label labelError;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnFrequence;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnImpedance;
         private System.Windows.Forms.PictureBox pictureBoxCircuit;
         private System.Windows.Forms.TreeView treeViewCircuit;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripEditConnection;
         private System.Windows.Forms.ToolStripMenuItem ChangeConectionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem DeleteConectionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem AddElementsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ChangeToParallelToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ChangeToSeriesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem AddConectionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem AddParallelToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem AddSeriesToolStripMenuItem1;
         private System.Windows.Forms.Button buttonNewSeriesCircuit;
         private System.Windows.Forms.Button buttonNewParallelCircuit;
+        private System.Windows.Forms.ToolStripMenuItem AddToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem AddCircuitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem AddSeriesCircuitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem AddParallelCircuitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem AddElementToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem AddResistorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem AddCapacitorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem AddInductorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem EditOfElementToolStripMenuItem;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnFrequence;
+        private System.Windows.Forms.DataGridViewComboBoxColumn ColumnPrefix;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnImpedance;
 
 
 
