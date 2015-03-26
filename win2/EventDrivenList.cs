@@ -21,6 +21,15 @@ namespace CircuitCalculation
             }
         }
 
+        public new bool Remove(T item)
+        {
+            if (ItemRemoved != null)
+            {
+                ItemRemoved(this, null);
+            }
+            return base.Remove(item);
+        }
+
         public new void RemoveAt(int index)
         {
             base.RemoveAt(index);

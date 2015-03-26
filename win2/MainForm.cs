@@ -83,6 +83,7 @@ namespace CircuitCalculation
             {
                 Calculate();
             }
+            this.pictureBoxCircuit.Invalidate();
             
         }
 
@@ -106,7 +107,7 @@ namespace CircuitCalculation
             {
                 try
                 {
-                    frequencies[i] = Convert.ToDouble(this.dataGridViewFreq[0, i].Value) *
+                    frequencies[i] = Convert.ToDouble(this.dataGridViewFreq[0, i].Value)*
                         Multiplier.GetMultiPlier((PrefixType)Enum.Parse(typeof(PrefixType), this.dataGridViewFreq[1, i].Value.ToString()));
                 }
                 catch (FormatException)
@@ -306,50 +307,64 @@ namespace CircuitCalculation
         #region Отрисовка цепи
         private void pictureBoxCircuit_Paint(object sender, PaintEventArgs e)
         {
-            
-            //if (this.Circuit.Elements.Count != 0)
-            //{
-            //    Point pointBegin = new Point(0, this.pictureBoxCircuit.Height / 2);
-            //    Point pointEnd = new Point(pointBegin.X + 50, pointBegin.Y);
-            //    foreach (var circuit in this.Circuits)
-            //    {
-            //        if (circuit.ConnectionType == ConnectionType.Series)
-            //        {
-            //            foreach (var element in circuit.Elements)
-            //            {
-            //                e.Graphics.DrawImage(GetImageElement(element), pointBegin.X, pointBegin.Y, 50, 50);
-            //                pointBegin.X = pointBegin.X + 100;
-            //                e.Graphics.DrawLine(Pens.Black, pointEnd.X, pointEnd.Y + 25, pointBegin.X, pointBegin.Y + 25);
-            //                pointEnd.X = pointEnd.X + 100;
-            //            }
-            //        }
-            //        else
-            //        {
-            //            Point X = new Point(pointBegin.X, pointBegin.Y);
-            //            Point Y = new Point(pointEnd.X, pointEnd.Y);
-            //            foreach (var element in circuit.Elements)
-            //            {
+            Point pointBegin = new Point(0, this.pictureBoxCircuit.Height / 2);
+            Point pointEnd = new Point(pointBegin.X + 50, pointBegin.Y);
+            e.Graphics.DrawLine(Pens.Black, pointBegin, pointEnd);
+            pointBegin = pointEnd;
+            PaintCircuit(pointBegin, ref pointEnd, this.Circuit, e);
+        }
 
-            //                e.Graphics.DrawImage(GetImageElement(element), pointBegin.X, pointBegin.Y, 50, 50);
-            //                if (element != circuit.Elements[0])
-            //                {
-            //                    e.Graphics.DrawLine(Pens.Black, pointBegin.X - 2, pointBegin.Y + 25, pointBegin.X - 2, pointBegin.Y - 25);
-            //                    e.Graphics.DrawLine(Pens.Black, pointEnd.X + 2, pointEnd.Y + 25, pointEnd.X + 2, pointEnd.Y - 25);
-            //                }
-
-            //                pointBegin.Y = pointBegin.Y + 50;
-            //                pointEnd.Y = pointEnd.Y + 50;
-
-            //            }
-            //            pointBegin = X;
-            //            pointEnd = Y;
-            //            pointBegin.X = pointBegin.X + 100;
-            //            e.Graphics.DrawLine(Pens.Black, pointEnd.X, pointEnd.Y + 25, pointBegin.X, pointBegin.Y + 25);
-
-            //        }
-            //    }
-            //}
-
+        private void PaintCircuit(Point pointBegin, ref Point pointEnd, ICircuit circuit, PaintEventArgs e)
+        {
+            if (circuit is IElement)
+            {
+                IElement element = (IElement)circuit;
+                e.Graphics.DrawImage(element.GetImageOfElement(), pointBegin.X, pointBegin.Y - 25, 50, 50);
+            }
+            else if (circuit is ICircuit)
+            {
+                if (circuit is SeriesCircuit)
+                {         
+                    foreach (ICircuit subCircuit in circuit.SubCircuits)
+                    {
+                        PaintCircuit(pointBegin, ref pointEnd, subCircuit, e);
+                        pointBegin.X += 100;
+                        pointEnd.X += 50;
+                        e.Graphics.DrawLine(Pens.Black, pointBegin, pointEnd);
+                        pointEnd = pointBegin;
+                    }
+                }
+                else if (circuit is ParallelCircuit)
+                {
+                    
+                    foreach (ICircuit subCircuit in circuit.SubCircuits)
+                    {
+                        
+                        if (subCircuit != circuit.SubCircuits[0])
+                        {
+                            //pointEnd.X += 50;
+                            pointBegin.Y -= 50;
+                            pointEnd.Y -= 50;
+                            PaintCircuit(pointBegin, ref pointEnd, subCircuit, e);
+                            e.Graphics.DrawLine(Pens.Black, pointBegin.X - 2, pointBegin.Y, pointBegin.X - 2, pointBegin.Y + 50);
+                            e.Graphics.DrawLine(Pens.Black, pointEnd.X + 2, pointEnd.Y, pointEnd.X + 2, pointEnd.Y + 50);
+                        }
+                        else
+                        {
+                            PaintCircuit(pointBegin, ref pointEnd, subCircuit, e);
+                        }
+                        pointEnd = pointBegin;
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException();
+                }
+            }
+            else
+            {
+                return;
+            }
         }
         #endregion
 
