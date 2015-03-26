@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CircuitCalculation
+﻿namespace CircuitCalculation
 {
+    //TODO: где xml-комментарий?
     public enum PrefixType
     {
         Nano = -9,
