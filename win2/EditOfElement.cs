@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -12,11 +10,17 @@ using CircuitCalculation.Elements;
 
 namespace CircuitCalculation
 {
+    //TODO: xml-комментарий?
+    //TODO: именование форм
     public partial class EditOfElement : Form
     {
+        //TODO: xml-комментарий?
         private readonly Dictionary<PrefixType, string> Prefix;
+        //TODO: xml-комментарий?
         private readonly Dictionary<Type, string> TypeOfElement;
 
+        //TODO: xml-комментарий?
+        //TODO: именование
         private IElement Element;
 
         public EditOfElement(IElement element)
@@ -24,6 +28,9 @@ namespace CircuitCalculation
             InitializeComponent();
 
             this.Element = element;
+            //TODO: упростить?
+            //TODO: ToString
+            //TODO: Enum.GetValues?
             Prefix = new Dictionary<PrefixType, string>();
             Prefix.Add(PrefixType.Giga, "Giga");
             Prefix.Add(PrefixType.Mega, "Mega");
@@ -44,15 +51,15 @@ namespace CircuitCalculation
             }
         }
 
-        
+        //TODO: пустые строки
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
-        
-        
 
+        //TODO: пустые строки
+        //TODO: пустые строки
         private void buttonOK_Click(object sender, EventArgs e)
         {
             try
@@ -90,11 +97,13 @@ namespace CircuitCalculation
 
         private void textBoxValueOfElement_KeyPress(object sender, KeyPressEventArgs e)
         {
+            //TODO: лучше сравнивать не с ASCII-кодом, а с конкретным символом. Читаемость!
+            //TODO: упростить?
             if ((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8 && e.KeyChar != 46)
             {
                 e.Handled = true;
             }
         }
     }
-   
+    //TODO: пустые строки
 }

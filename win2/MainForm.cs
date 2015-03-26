@@ -2,9 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,7 +12,7 @@ using CircuitCalculation.Elements;
 
 namespace CircuitCalculation
 {
-    
+    //TODO: несколько готовых программных серкитов для быстрого удобного тестирования!!!
     public partial class MainForm : Form
     {
         /// <summary>
@@ -24,22 +22,30 @@ namespace CircuitCalculation
                                   "Конденсатор",
                                   "Катушка"};
 
+        //TODO: может, сделать поле Description в Circuit?
         /// <summary>
         /// 0 - последовательное, 1 - параллельное
         /// </summary>
         readonly string[] Circuits = { "Последовательное", 
                                   "Параллельное"};
 
+        //TODO: где xml-комментарий?
         private readonly Dictionary<PrefixType, string> Prefix;
 
+        //TODO: где xml-комментарий?
+        //TODO: именование!
         private ICircuit Circuit;
+        //TODO: где xml-комментарий?
+        //TODO: именование!
         private ICircuit SelectedCircuit;
+        //TODO: где xml-комментарий?
+        //TODO: именование!
         private double[] frequencies;
         public MainForm()
         {
             InitializeComponent();
             Prefix = new Dictionary<PrefixType, string>();
-            Prefix.Add(PrefixType.Giga, "Giga");
+            Prefix.Add(PrefixType.Giga, PrefixType.Giga.ToString());
             Prefix.Add(PrefixType.Mega, "Mega");
             Prefix.Add(PrefixType.Kilo, "Kilo");
             Prefix.Add(PrefixType.Not, "Not");
@@ -76,7 +82,7 @@ namespace CircuitCalculation
             }
         }
 
-        
+        //TODO: зачем столько пустых строк!
         private void Circuit_CircuitChanged(object sender, EventArgs e)
         {
             if (frequencies != null)
@@ -87,8 +93,12 @@ namespace CircuitCalculation
             
         }
 
+        //TODO: где xml-комментарий?
+        //TODO: посчитать что? Импеданс или отрисовку?
         private void Calculate()
         {
+            //TODO: лучше var
+            //TODO: зачем выделять память под объект, если ниже тут же присваивается другой?
             Complex[] z = new Complex[frequencies.Length];
 
             z = Circuit.CalculateZ(frequencies);
@@ -99,7 +109,7 @@ namespace CircuitCalculation
             }
         }
 
-        
+        //TODO: зачем столько пустых строк!
         private void buttonOK_Click(object sender, EventArgs e)
         {       
             frequencies = new double[this.dataGridViewFreq.RowCount];
@@ -138,6 +148,7 @@ namespace CircuitCalculation
                     SelectedCircuit = SelectedCircuit.SubCircuits[path[i]];
                 }
             }
+            //TODO: сделать проще без дублирования
             if (SelectedCircuit is IElement)
             {
                 this.EditOfElementToolStripMenuItem.Enabled = true;
@@ -153,11 +164,12 @@ namespace CircuitCalculation
             
         }
 
-        
-
+        //TODO: зачем столько пустых строк!
+        //TODO: зачем столько пустых строк!
         #region Создание новой цепи
         private void buttonNewParallelCircuit_Click(object sender, EventArgs e)
         {
+            //TODO: дублирование с нижним обработчиком
             if (this.treeViewCircuit.Nodes.Count != 0)
             {
                 this.treeViewCircuit.Nodes.Remove(this.treeViewCircuit.Nodes[0]);
@@ -167,11 +179,13 @@ namespace CircuitCalculation
             this.treeViewCircuit.Nodes.Add(node);
 
             Circuit = new ParallelCircuit(null);
-            Circuit.CircuitChanged += new EventHandler(Circuit_CircuitChanged);
+            Circuit.CircuitChanged += Circuit_CircuitChanged;
         }
 
+        //TODO: именование обработчика и кнопки. Есть NewCircuit, а выше NewParallelCircuit
         private void buttonNewCircuit_Click(object sender, EventArgs e)
         {
+            //TODO: дублирование с верхним обработчиком
             if (this.treeViewCircuit.Nodes.Count != 0)
             {
                 this.treeViewCircuit.Nodes.Remove(this.treeViewCircuit.Nodes[0]);
@@ -181,13 +195,17 @@ namespace CircuitCalculation
             this.treeViewCircuit.Nodes.Add(node);
 
             Circuit = new SeriesCircuit(null);
-            Circuit.CircuitChanged += new EventHandler(Circuit_CircuitChanged);
+            Circuit.CircuitChanged += Circuit_CircuitChanged;
         }
         #endregion
 
-        #region Редактирование цепи
+        //TODO: где //***********************************************************************************?
+
+        #region - Редактирование цепи -
         private void ChangeToParallelToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //TODO: дублирование с нижним обработчиком
+            //TODO: обращение по индексу не очевидно
             this.treeViewCircuit.SelectedNode.Text = Circuits[1];
             ParallelCircuit newCircuit;
             if (SelectedCircuit.ParentCircuit == null)
@@ -207,6 +225,8 @@ namespace CircuitCalculation
 
         private void ChangeToSeriesToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //TODO: дублирование с верхним обработчиком
+            //TODO: обращение по индексу не очевидно
             this.treeViewCircuit.SelectedNode.Text = Circuits[0];
             SeriesCircuit newCircuit;
             if (SelectedCircuit.ParentCircuit == null)
@@ -226,6 +246,7 @@ namespace CircuitCalculation
             
         }
 
+        //TODO: Connection с двумя N
         private void DeleteConectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (this.treeViewCircuit.SelectedNode.Parent != null)
@@ -244,43 +265,51 @@ namespace CircuitCalculation
 
         private void AddSeriesCircuitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //TODO: дублирование с нижним обработчиком
             TreeNode node = new TreeNode();
+            //TODO: обращение по индексу не очевидно
             node.Text = Circuits[0];
             node.ContextMenuStrip = contextMenuStripEditConnection;
             this.treeViewCircuit.SelectedNode.Nodes.Add(node);
 
             SeriesCircuit newCircuit = new SeriesCircuit(SelectedCircuit);
-            newCircuit.CircuitChanged += new EventHandler(Circuit_CircuitChanged);
+            newCircuit.CircuitChanged += Circuit_CircuitChanged;
             SelectedCircuit.SubCircuits.Add(newCircuit);
         }
 
         private void AddParallelCircuitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //TODO: дублирование с верхним обработчиком
             TreeNode node = new TreeNode();
+            //TODO: обращение по индексу не очевидно
             node.Text = Circuits[1];
             node.ContextMenuStrip = contextMenuStripEditConnection;
             this.treeViewCircuit.SelectedNode.Nodes.Add(node);
-
+            
             ParallelCircuit newCircuit = new ParallelCircuit(SelectedCircuit);
-            newCircuit.CircuitChanged += new EventHandler(Circuit_CircuitChanged);
+            newCircuit.CircuitChanged += Circuit_CircuitChanged;
             SelectedCircuit.SubCircuits.Add(newCircuit);
         }
 
         private void AddResistorToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //TODO: дублирование с нижним обработчиком
             TreeNode node = new TreeNode();
+            //TODO: обращение по индексу не очевидно
             node.Text = Elements[0];
             node.ContextMenuStrip = contextMenuStripEditConnection;
             this.treeViewCircuit.SelectedNode.Nodes.Add(node);
 
             Resistor newElement = new Resistor(SelectedCircuit);
-            newElement.CircuitChanged += new EventHandler(Circuit_CircuitChanged);
+            newElement.CircuitChanged += Circuit_CircuitChanged;
             SelectedCircuit.SubCircuits.Add(newElement);
         }
 
         private void AddCapacitorToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //TODO: дублирование с верхним обработчиком
             TreeNode node = new TreeNode();
+            //TODO: обращение по индексу не очевидно
             node.Text = Elements[1];
             node.ContextMenuStrip = contextMenuStripEditConnection;
             this.treeViewCircuit.SelectedNode.Nodes.Add(node);
@@ -292,7 +321,9 @@ namespace CircuitCalculation
 
         private void AddInductorToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //TODO: дублирование с верхним обработчиком
             TreeNode node = new TreeNode();
+            //TODO: обращение по индексу не очевидно
             node.Text = Elements[2];
             node.ContextMenuStrip = contextMenuStripEditConnection;
             this.treeViewCircuit.SelectedNode.Nodes.Add(node);
@@ -302,7 +333,9 @@ namespace CircuitCalculation
             SelectedCircuit.SubCircuits.Add(newElement);
         }
 
-        #endregion
+        #endregion - Редактирование цепи -
+
+        //TODO: где //***********************************************************************************?
 
         #region Отрисовка цепи
         private void pictureBoxCircuit_Paint(object sender, PaintEventArgs e)
@@ -314,6 +347,8 @@ namespace CircuitCalculation
             PaintCircuit(pointBegin, ref pointEnd, this.Circuit, e);
         }
 
+        //TODO: xml-комментарий?
+        //TODO: почитать паттерны GRASP и "Информационный эксперт" в частности
         private void PaintCircuit(Point pointBegin, ref Point pointEnd, ICircuit circuit, PaintEventArgs e)
         {
             if (circuit is IElement)
@@ -363,15 +398,16 @@ namespace CircuitCalculation
             }
             else
             {
+                //TODO: исключение?
                 return;
             }
-        }
+        }//TODO: где пустая строка!
         #endregion
 
-        
-
-        
-        
-
+        //TODO: зачем столько пустых строк!
+        //TODO: зачем столько пустых строк!
+        //TODO: зачем столько пустых строк!
+        //TODO: зачем столько пустых строк!
+        //TODO: зачем столько пустых строк!
     }
 }

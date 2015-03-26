@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
@@ -9,17 +8,20 @@ using CircuitCalculation.Elements;
 
 namespace CircuitCalculation
 {
+    //TODO: Точки в конце xml-комментариев
     /// <summary>
     /// Последовательное соединение
     /// </summary>
     class SeriesCircuit : ICircuit
     {
+        //TODO: где xml-комментарий?
         public EventDrivenList<ICircuit> SubCircuits { get; set; }
-
+        //TODO: где xml-комментарий?
         public ICircuit ParentCircuit { get; set; }
-
+        //TODO: где xml-комментарий?
         public event EventHandler CircuitChanged;
-
+        //TODO: где xml-комментарий?
+        //TODO: именование переменных! Входная переменная должна быть parentCircuit, а не просто circuit!
         public SeriesCircuit(ICircuit circuit)
         {
             SubCircuits = new EventDrivenList<ICircuit>();
@@ -36,7 +38,7 @@ namespace CircuitCalculation
             }
         }
 
-
+        //TODO: где xml-комментарий?
         public Complex[] CalculateZ(double[] frequencies)
         {
             Complex[] z = new Complex[frequencies.Length];
