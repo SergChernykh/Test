@@ -101,7 +101,7 @@
             this.DeleteConectionToolStripMenuItem.Name = "DeleteConectionToolStripMenuItem";
             this.DeleteConectionToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
             this.DeleteConectionToolStripMenuItem.Text = "Удалить соединение/элемент";
-            this.DeleteConectionToolStripMenuItem.Click += new System.EventHandler(this.DeleteConectionToolStripMenuItem_Click);
+            this.DeleteConectionToolStripMenuItem.Click += new System.EventHandler(this.DeleteConnectionToolStripMenuItem_Click);
             // 
             // AddToolStripMenuItem
             // 

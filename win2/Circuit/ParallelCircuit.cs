@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
+using System.Drawing;
 
 using CircuitCalculation.Elements;
 
 
-namespace CircuitCalculation
+namespace CircuitCalculation.Circuit
 {
     //TODO: Точки в конце xml-комментариев
     /// <summary>
@@ -22,13 +23,13 @@ namespace CircuitCalculation
         //TODO: где xml-комментарий?
         public event EventHandler CircuitChanged;
 
-        //TODO: именование переменных! Входная переменная должна быть parentCircuit, а не просто circuit!
-        public ParallelCircuit(ICircuit circuit)
+        
+        public ParallelCircuit(ICircuit parentCircuit)
         {
             SubCircuits = new EventDrivenList<ICircuit>();
             SubCircuits.ItemAdded += SubCircuits_ItemChanged;
             SubCircuits.ItemRemoved += SubCircuits_ItemChanged;
-            ParentCircuit = circuit;
+            ParentCircuit = parentCircuit;
         }
 
         private void SubCircuits_ItemChanged(object sender, EventArgs e)
@@ -60,6 +61,29 @@ namespace CircuitCalculation
             return z;
         }
 
-        
+
+
+
+        public void Paint(Graphics graphic, Point pointBegin, Point pointEnd)
+        {
+            foreach (ICircuit subCircuit in SubCircuits)
+            {
+
+                if (subCircuit != SubCircuits[0])
+                {
+                    //pointEnd.X += 50;
+                    pointBegin.Y -= 50;
+                    pointEnd.Y -= 50;
+                    Paint(graphic, pointBegin, pointEnd);
+                    graphic.DrawLine(Pens.Black, pointBegin.X - 2, pointBegin.Y, pointBegin.X - 2, pointBegin.Y + 50);
+                    graphic.DrawLine(Pens.Black, pointEnd.X + 2, pointEnd.Y, pointEnd.X + 2, pointEnd.Y + 50);
+                }
+                else
+                {
+                    Paint(graphic, pointBegin, pointEnd);
+                }
+                pointEnd = pointBegin;
+            }
+        }
     }
 }

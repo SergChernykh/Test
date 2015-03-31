@@ -5,62 +5,25 @@ using System.Threading.Tasks;
 using System.Numerics;
 
 namespace CircuitCalculation.Elements
-{   
+{
+    using System.Drawing;
+
+    using CircuitCalculation.Circuit;
     //TODO: Точки в конце xml-комментариев
     /// <summary>
     /// Резистор
     /// </summary>
-    public class Resistor : IElement, ICircuit
+    public class Resistor : Element
     {
+        
         //TODO: где xml-комментарий?
-        //TODO: общая логика для всех элементов. Может быть, нужен базовый класс?
-        string _name;
-        //TODO: где xml-комментарий?
-        //TODO: общая логика для всех элементов. Может быть, нужен базовый класс?
-        double _value;
-
-        //TODO: где xml-комментарий?
-        //TODO: общая логика для всех элементов. Может быть, нужен базовый класс?
-        //TODO: System.Drawing лучше перенести в using, а здесь оставить просто Image
-        System.Drawing.Image _imageOfElement;
-        //TODO: где xml-комментарий?
-        //TODO: общая логика для всех элементов. Может быть, нужен базовый класс?
-        public string Name
+        public Resistor(ICircuit parentCircuit)
         {
-            get { return _name; }
-            set { _name = value; }
+            ParentCircuit = parentCircuit;
+            _image = global::CircuitCalculation.Properties.Resources.Resistor;
         }
         //TODO: где xml-комментарий?
-        //TODO: общая логика для всех элементов. Может быть, нужен базовый класс?
-        public double Value
-        {
-            get { return _value; }
-            set
-            {
-                if (value > 0)
-                {
-                    _value = value;
-                    if (CircuitChanged != null)
-                    {
-                        CircuitChanged(this, null);  
-                    }
-                }
-                else
-                {
-                    throw new ArgumentException("Значение номинала должно быть положительным");
-                }
-
-
-            }
-        }
-        //TODO: где xml-комментарий?
-        public Resistor(ICircuit circuit)
-        {
-            ParentCircuit = circuit;
-            _imageOfElement = global::CircuitCalculation.Properties.Resources.Resistor;
-        }
-        //TODO: где xml-комментарий?
-        public Complex[] CalculateZ(double[] frequencies)
+        public override Complex[] CalculateZ(double[] frequencies)
         {
             Complex[] z = new Complex[frequencies.Length];
             for (int i = 0; i < frequencies.Length; i++)
@@ -69,24 +32,7 @@ namespace CircuitCalculation.Elements
             }
             return z;
         }
-        //TODO: где xml-комментарий?
-        //TODO: общая логика для всех элементов. Может быть, нужен базовый класс?
-        public ICircuit ParentCircuit { get; set; }
-        //TODO: где xml-комментарий?
-        //TODO: общая логика для всех элементов. Может быть, нужен базовый класс?
-        public EventDrivenList<ICircuit> SubCircuits { get { return null; } }
-        //TODO: где xml-комментарий?
-        //TODO: общая логика для всех элементов. Может быть, нужен базовый класс?
-        public event EventHandler CircuitChanged;
-        //TODO: зачем столько пустых строк?
-        //TODO: зачем столько пустых строк?
-        //TODO: зачем столько пустых строк?
-        //TODO: зачем столько пустых строк?
-        //TODO: где xml-комментарий?
-        //TODO: общая логика для всех элементов. Может быть, нужен базовый класс?
-        public System.Drawing.Image GetImageOfElement()
-        {
-            return _imageOfElement;
-        }
+
+        
     }
 }

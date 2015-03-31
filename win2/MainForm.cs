@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Numerics;
 
 using CircuitCalculation.Elements;
+using CircuitCalculation.Circuit;
 
 namespace CircuitCalculation
 {
@@ -99,9 +100,9 @@ namespace CircuitCalculation
         {
             //TODO: лучше var
             //TODO: зачем выделять память под объект, если ниже тут же присваивается другой?
-            Complex[] z = new Complex[frequencies.Length];
+            //Complex[] z = new Complex[frequencies.Length];
 
-            z = Circuit.CalculateZ(frequencies);
+            var z = Circuit.CalculateZ(frequencies);
 
             for (int i = 0; i < this.dataGridViewFreq.RowCount; i++)
             {
@@ -118,7 +119,7 @@ namespace CircuitCalculation
                 try
                 {
                     frequencies[i] = Convert.ToDouble(this.dataGridViewFreq[0, i].Value)*
-                        Multiplier.GetMultiPlier((PrefixType)Enum.Parse(typeof(PrefixType), this.dataGridViewFreq[1, i].Value.ToString()));
+                        Multiplier.GetMultiplier((PrefixType)Enum.Parse(typeof(PrefixType), this.dataGridViewFreq[1, i].Value.ToString()));
                 }
                 catch (FormatException)
                 {
@@ -149,7 +150,7 @@ namespace CircuitCalculation
                 }
             }
             //TODO: сделать проще без дублирования
-            if (SelectedCircuit is IElement)
+            if (SelectedCircuit is Element)
             {
                 this.EditOfElementToolStripMenuItem.Enabled = true;
                 this.AddToolStripMenuItem.Enabled = false;
@@ -246,8 +247,8 @@ namespace CircuitCalculation
             
         }
 
-        //TODO: Connection с двумя N
-        private void DeleteConectionToolStripMenuItem_Click(object sender, EventArgs e)
+        
+        private void DeleteConnectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (this.treeViewCircuit.SelectedNode.Parent != null)
             {
@@ -259,7 +260,7 @@ namespace CircuitCalculation
 
         private void EditOfElementToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            EditOfElement edit = new EditOfElement((IElement)SelectedCircuit);
+            EditElementForm edit = new EditElementForm((Element)SelectedCircuit);
             edit.ShowDialog();
         }
 
@@ -344,22 +345,29 @@ namespace CircuitCalculation
             Point pointEnd = new Point(pointBegin.X + 50, pointBegin.Y);
             e.Graphics.DrawLine(Pens.Black, pointBegin, pointEnd);
             pointBegin = pointEnd;
-            PaintCircuit(pointBegin, ref pointEnd, this.Circuit, e);
+            if (this.Circuit != null)
+            {
+                this.Circuit.Paint(e.Graphics, pointBegin, pointEnd);
+            }
+            
+            //PaintCircuit(pointBegin, ref pointEnd, this.Circuit, e);
         }
 
         //TODO: xml-комментарий?
         //TODO: почитать паттерны GRASP и "Информационный эксперт" в частности
         private void PaintCircuit(Point pointBegin, ref Point pointEnd, ICircuit circuit, PaintEventArgs e)
         {
-            if (circuit is IElement)
+            if (circuit is Element)
             {
-                IElement element = (IElement)circuit;
-                e.Graphics.DrawImage(element.GetImageOfElement(), pointBegin.X, pointBegin.Y - 25, 50, 50);
+                Element element = (Element)circuit;
+                element.Paint(e.Graphics, pointBegin, pointEnd);
+                //e.Graphics.DrawImage(element.GetImageOfElement(), pointBegin.X, pointBegin.Y - 25, 50, 50);
             }
             else if (circuit is ICircuit)
             {
                 if (circuit is SeriesCircuit)
-                {         
+                {
+                    
                     foreach (ICircuit subCircuit in circuit.SubCircuits)
                     {
                         PaintCircuit(pointBegin, ref pointEnd, subCircuit, e);

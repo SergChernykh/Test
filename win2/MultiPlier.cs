@@ -5,19 +5,17 @@ using System.Threading.Tasks;
 
 namespace CircuitCalculation
 {
-    //TODO: почему класс не static?
     /// <summary>
-    /// Множитель величины
+    /// Множитель величины.
     /// </summary>
-    public class Multiplier
+    static public class Multiplier
     {
-        //TODO: именование! P заглавная
         /// <summary>
-        /// Получить множитель по заднному префиксу
+        /// Получить множитель по заднному префиксу.
         /// </summary>
         /// <param name="prefix">Префикс</param>
         /// <returns>Множитель</returns>
-        static public double GetMultiPlier(PrefixType prefix)
+        static public double GetMultiplier(PrefixType prefix)
         {
             return Math.Pow(10, (int)prefix);
         }

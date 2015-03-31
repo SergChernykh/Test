@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
+using System.Drawing;
 
 using CircuitCalculation.Elements;
 
-namespace CircuitCalculation
+namespace CircuitCalculation.Circuit
 {
     //TODO: Точки в конце xml-комментариев
     /// <summary>
@@ -21,13 +22,13 @@ namespace CircuitCalculation
         //TODO: где xml-комментарий?
         public event EventHandler CircuitChanged;
         //TODO: где xml-комментарий?
-        //TODO: именование переменных! Входная переменная должна быть parentCircuit, а не просто circuit!
-        public SeriesCircuit(ICircuit circuit)
+        
+        public SeriesCircuit(ICircuit parentCircuit)
         {
             SubCircuits = new EventDrivenList<ICircuit>();
             SubCircuits.ItemAdded += SubCircuits_ItemChanged;
             SubCircuits.ItemRemoved += SubCircuits_ItemChanged;
-            ParentCircuit = circuit;
+            ParentCircuit = parentCircuit;
         }
 
         private void SubCircuits_ItemChanged(object sender, EventArgs e)
@@ -55,6 +56,19 @@ namespace CircuitCalculation
                 }
             }
             return z;
+        }
+
+
+        public void Paint(Graphics graphic, Point pointBegin, Point pointEnd)
+        {
+            foreach (ICircuit subCircuit in SubCircuits)
+            {
+                Paint(graphic, pointBegin, pointEnd);
+                pointBegin.X += 100;
+                pointEnd.X += 50;
+                graphic.DrawLine(Pens.Black, pointBegin, pointEnd);
+                pointEnd = pointBegin;
+            }
         }
     }
         
