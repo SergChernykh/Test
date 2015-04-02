@@ -1,34 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using System.Numerics;
-
-using CircuitCalculation.Elements;
-
-namespace CircuitCalculation.Circuit
+﻿namespace CircuitCalculation.Circuit
 {
+    using System;
+    using System.Numerics;
     using System.Drawing;
 
-    
     /// <summary>
     /// Цепь элементов.
     /// </summary>
     public interface ICircuit
     {
-        
         /// <summary>
         /// Родительская цепь.
         /// </summary>
         ICircuit ParentCircuit { get; set; }
 
-        
         /// <summary>
         /// Соединения, входящие в текущую цепь.
         /// </summary>
         EventDrivenList<ICircuit> SubCircuits { get; }
 
-        
         /// <summary>
         /// Расчитать импеданс цепи на заданных частотах.
         /// </summary>
@@ -36,13 +26,18 @@ namespace CircuitCalculation.Circuit
         /// <returns>Расчитанное значение импеданса</returns>
         Complex[] CalculateZ(double[] frequencies);
 
-        
         /// <summary>
         /// Зажигается при измененииях в цепи.
         /// </summary>
         event EventHandler CircuitChanged;
 
-
-        void Paint(Graphics graphic, Point pointBegin, Point pointEnd);
+        /// <summary>
+        /// Отрисовать цепь.
+        /// </summary>
+        /// <param name="graphic"></param>
+        /// <param name="pointBegin"></param>
+        /// <param name="height"></param>
+        /// <param name="width"></param>
+        void Paint(Graphics graphic, Point pointBegin, ref float height, ref float width);
     }
 }

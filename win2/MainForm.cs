@@ -34,13 +34,13 @@ namespace CircuitCalculation
         private readonly Dictionary<PrefixType, string> Prefix;
 
         //TODO: где xml-комментарий?
-        //TODO: именование!
-        private ICircuit Circuit;
+        
+        private ICircuit _circuit;
         //TODO: где xml-комментарий?
-        //TODO: именование!
-        private ICircuit SelectedCircuit;
+        
+        private ICircuit _selectedCircuit;
         //TODO: где xml-комментарий?
-        //TODO: именование!
+        
         private double[] frequencies;
         public MainForm()
         {
@@ -102,7 +102,7 @@ namespace CircuitCalculation
             //TODO: зачем выделять память под объект, если ниже тут же присваивается другой?
             //Complex[] z = new Complex[frequencies.Length];
 
-            var z = Circuit.CalculateZ(frequencies);
+            var z = _circuit.CalculateZ(frequencies);
 
             for (int i = 0; i < this.dataGridViewFreq.RowCount; i++)
             {
@@ -134,7 +134,7 @@ namespace CircuitCalculation
         private void treeViewCircuit_AfterSelect(object sender, TreeViewEventArgs e)
         {
 
-            this.SelectedCircuit = this.Circuit;
+            this._selectedCircuit = this._circuit;
             if (e.Node.Level > 0)
             {
                 int[] path = new int[e.Node.Level];
@@ -146,22 +146,13 @@ namespace CircuitCalculation
                 }
                 for (int i = 0; i < e.Node.Level; i++)
                 {
-                    SelectedCircuit = SelectedCircuit.SubCircuits[path[i]];
+                    _selectedCircuit = _selectedCircuit.SubCircuits[path[i]];
                 }
             }
-            //TODO: сделать проще без дублирования
-            if (SelectedCircuit is Element)
-            {
-                this.EditOfElementToolStripMenuItem.Enabled = true;
-                this.AddToolStripMenuItem.Enabled = false;
-                this.ChangeConectionToolStripMenuItem.Enabled = false;
-            }
-            else
-            {
-                this.EditOfElementToolStripMenuItem.Enabled = false;
-                this.AddToolStripMenuItem.Enabled = true;
-                this.ChangeConectionToolStripMenuItem.Enabled = true;
-            }
+
+            this.EditOfElementToolStripMenuItem.Enabled = _selectedCircuit is Element;
+            this.AddToolStripMenuItem.Enabled = !(_selectedCircuit is Element);
+            this.ChangeConectionToolStripMenuItem.Enabled = !(_selectedCircuit is Element);
             
         }
 
@@ -179,8 +170,8 @@ namespace CircuitCalculation
             node.ContextMenuStrip = this.contextMenuStripEditConnection;
             this.treeViewCircuit.Nodes.Add(node);
 
-            Circuit = new ParallelCircuit(null);
-            Circuit.CircuitChanged += Circuit_CircuitChanged;
+            _circuit = new ParallelCircuit(null);
+            _circuit.CircuitChanged += Circuit_CircuitChanged;
         }
 
         //TODO: именование обработчика и кнопки. Есть NewCircuit, а выше NewParallelCircuit
@@ -195,8 +186,8 @@ namespace CircuitCalculation
             node.ContextMenuStrip = this.contextMenuStripEditConnection;
             this.treeViewCircuit.Nodes.Add(node);
 
-            Circuit = new SeriesCircuit(null);
-            Circuit.CircuitChanged += Circuit_CircuitChanged;
+            _circuit = new SeriesCircuit(null);
+            _circuit.CircuitChanged += Circuit_CircuitChanged;
         }
         #endregion
 
@@ -209,19 +200,19 @@ namespace CircuitCalculation
             //TODO: обращение по индексу не очевидно
             this.treeViewCircuit.SelectedNode.Text = Circuits[1];
             ParallelCircuit newCircuit;
-            if (SelectedCircuit.ParentCircuit == null)
+            if (_selectedCircuit.ParentCircuit == null)
             {
                 newCircuit = new ParallelCircuit(null);
             }
             else
             {
-                newCircuit = new ParallelCircuit(SelectedCircuit.ParentCircuit);
-                SelectedCircuit.ParentCircuit.SubCircuits.Add(newCircuit);
+                newCircuit = new ParallelCircuit(_selectedCircuit.ParentCircuit);
+                _selectedCircuit.ParentCircuit.SubCircuits.Add(newCircuit);
             }
-            newCircuit.SubCircuits = SelectedCircuit.SubCircuits;
+            newCircuit.SubCircuits = _selectedCircuit.SubCircuits;
             newCircuit.CircuitChanged += Circuit_CircuitChanged;
             
-            SelectedCircuit = newCircuit;
+            _selectedCircuit = newCircuit;
         }
 
         private void ChangeToSeriesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -230,19 +221,19 @@ namespace CircuitCalculation
             //TODO: обращение по индексу не очевидно
             this.treeViewCircuit.SelectedNode.Text = Circuits[0];
             SeriesCircuit newCircuit;
-            if (SelectedCircuit.ParentCircuit == null)
+            if (_selectedCircuit.ParentCircuit == null)
             {
                 newCircuit = new SeriesCircuit(null);
             }
             else
             {
-                newCircuit = new SeriesCircuit(SelectedCircuit.ParentCircuit);
-                SelectedCircuit.ParentCircuit.SubCircuits.Add(newCircuit);
+                newCircuit = new SeriesCircuit(_selectedCircuit.ParentCircuit);
+                _selectedCircuit.ParentCircuit.SubCircuits.Add(newCircuit);
             }
-            newCircuit.SubCircuits = SelectedCircuit.SubCircuits;
+            newCircuit.SubCircuits = _selectedCircuit.SubCircuits;
             newCircuit.CircuitChanged += Circuit_CircuitChanged;
             
-            SelectedCircuit = newCircuit;
+            _selectedCircuit = newCircuit;
             
             
         }
@@ -252,7 +243,7 @@ namespace CircuitCalculation
         {
             if (this.treeViewCircuit.SelectedNode.Parent != null)
             {
-                this.SelectedCircuit.ParentCircuit.SubCircuits.Remove(SelectedCircuit);
+                this._selectedCircuit.ParentCircuit.SubCircuits.Remove(_selectedCircuit);
                 this.treeViewCircuit.SelectedNode.Remove(); 
             }
             
@@ -260,7 +251,7 @@ namespace CircuitCalculation
 
         private void EditOfElementToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            EditElementForm edit = new EditElementForm((Element)SelectedCircuit);
+            EditElementForm edit = new EditElementForm((Element)_selectedCircuit);
             edit.ShowDialog();
         }
 
@@ -273,9 +264,9 @@ namespace CircuitCalculation
             node.ContextMenuStrip = contextMenuStripEditConnection;
             this.treeViewCircuit.SelectedNode.Nodes.Add(node);
 
-            SeriesCircuit newCircuit = new SeriesCircuit(SelectedCircuit);
+            SeriesCircuit newCircuit = new SeriesCircuit(_selectedCircuit);
             newCircuit.CircuitChanged += Circuit_CircuitChanged;
-            SelectedCircuit.SubCircuits.Add(newCircuit);
+            _selectedCircuit.SubCircuits.Add(newCircuit);
         }
 
         private void AddParallelCircuitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -287,9 +278,9 @@ namespace CircuitCalculation
             node.ContextMenuStrip = contextMenuStripEditConnection;
             this.treeViewCircuit.SelectedNode.Nodes.Add(node);
             
-            ParallelCircuit newCircuit = new ParallelCircuit(SelectedCircuit);
+            ParallelCircuit newCircuit = new ParallelCircuit(_selectedCircuit);
             newCircuit.CircuitChanged += Circuit_CircuitChanged;
-            SelectedCircuit.SubCircuits.Add(newCircuit);
+            _selectedCircuit.SubCircuits.Add(newCircuit);
         }
 
         private void AddResistorToolStripMenuItem_Click(object sender, EventArgs e)
@@ -301,9 +292,9 @@ namespace CircuitCalculation
             node.ContextMenuStrip = contextMenuStripEditConnection;
             this.treeViewCircuit.SelectedNode.Nodes.Add(node);
 
-            Resistor newElement = new Resistor(SelectedCircuit);
+            Resistor newElement = new Resistor(_selectedCircuit);
             newElement.CircuitChanged += Circuit_CircuitChanged;
-            SelectedCircuit.SubCircuits.Add(newElement);
+            _selectedCircuit.SubCircuits.Add(newElement);
         }
 
         private void AddCapacitorToolStripMenuItem_Click(object sender, EventArgs e)
@@ -315,9 +306,9 @@ namespace CircuitCalculation
             node.ContextMenuStrip = contextMenuStripEditConnection;
             this.treeViewCircuit.SelectedNode.Nodes.Add(node);
 
-            Capacitor newElement = new Capacitor(SelectedCircuit);
+            Capacitor newElement = new Capacitor(_selectedCircuit);
             newElement.CircuitChanged += new EventHandler(Circuit_CircuitChanged);
-            SelectedCircuit.SubCircuits.Add(newElement);
+            _selectedCircuit.SubCircuits.Add(newElement);
         }
 
         private void AddInductorToolStripMenuItem_Click(object sender, EventArgs e)
@@ -329,93 +320,31 @@ namespace CircuitCalculation
             node.ContextMenuStrip = contextMenuStripEditConnection;
             this.treeViewCircuit.SelectedNode.Nodes.Add(node);
 
-            Inductor newElement = new Inductor(SelectedCircuit);
+            Inductor newElement = new Inductor(_selectedCircuit);
             newElement.CircuitChanged += new EventHandler(Circuit_CircuitChanged);
-            SelectedCircuit.SubCircuits.Add(newElement);
+            _selectedCircuit.SubCircuits.Add(newElement);
         }
 
         #endregion - Редактирование цепи -
 
-        //TODO: где //***********************************************************************************?
+        //***********************************************************************************
 
-        #region Отрисовка цепи
+        #region - Отрисовка цепи -
+
         private void pictureBoxCircuit_Paint(object sender, PaintEventArgs e)
         {
             Point pointBegin = new Point(0, this.pictureBoxCircuit.Height / 2);
             Point pointEnd = new Point(pointBegin.X + 50, pointBegin.Y);
             e.Graphics.DrawLine(Pens.Black, pointBegin, pointEnd);
             pointBegin = pointEnd;
-            if (this.Circuit != null)
+            float height = 0;
+            float width = 0;
+            if (this._circuit != null)
             {
-                this.Circuit.Paint(e.Graphics, pointBegin, pointEnd);
+                this._circuit.Paint(e.Graphics, pointBegin, ref height, ref width);
             }
-            
-            //PaintCircuit(pointBegin, ref pointEnd, this.Circuit, e);
         }
 
-        //TODO: xml-комментарий?
-        //TODO: почитать паттерны GRASP и "Информационный эксперт" в частности
-        private void PaintCircuit(Point pointBegin, ref Point pointEnd, ICircuit circuit, PaintEventArgs e)
-        {
-            if (circuit is Element)
-            {
-                Element element = (Element)circuit;
-                element.Paint(e.Graphics, pointBegin, pointEnd);
-                //e.Graphics.DrawImage(element.GetImageOfElement(), pointBegin.X, pointBegin.Y - 25, 50, 50);
-            }
-            else if (circuit is ICircuit)
-            {
-                if (circuit is SeriesCircuit)
-                {
-                    
-                    foreach (ICircuit subCircuit in circuit.SubCircuits)
-                    {
-                        PaintCircuit(pointBegin, ref pointEnd, subCircuit, e);
-                        pointBegin.X += 100;
-                        pointEnd.X += 50;
-                        e.Graphics.DrawLine(Pens.Black, pointBegin, pointEnd);
-                        pointEnd = pointBegin;
-                    }
-                }
-                else if (circuit is ParallelCircuit)
-                {
-                    
-                    foreach (ICircuit subCircuit in circuit.SubCircuits)
-                    {
-                        
-                        if (subCircuit != circuit.SubCircuits[0])
-                        {
-                            //pointEnd.X += 50;
-                            pointBegin.Y -= 50;
-                            pointEnd.Y -= 50;
-                            PaintCircuit(pointBegin, ref pointEnd, subCircuit, e);
-                            e.Graphics.DrawLine(Pens.Black, pointBegin.X - 2, pointBegin.Y, pointBegin.X - 2, pointBegin.Y + 50);
-                            e.Graphics.DrawLine(Pens.Black, pointEnd.X + 2, pointEnd.Y, pointEnd.X + 2, pointEnd.Y + 50);
-                        }
-                        else
-                        {
-                            PaintCircuit(pointBegin, ref pointEnd, subCircuit, e);
-                        }
-                        pointEnd = pointBegin;
-                    }
-                }
-                else
-                {
-                    throw new ArgumentException();
-                }
-            }
-            else
-            {
-                //TODO: исключение?
-                return;
-            }
-        }//TODO: где пустая строка!
-        #endregion
-
-        //TODO: зачем столько пустых строк!
-        //TODO: зачем столько пустых строк!
-        //TODO: зачем столько пустых строк!
-        //TODO: зачем столько пустых строк!
-        //TODO: зачем столько пустых строк!
+        #endregion - Отрисовка цепи -
     }
 }

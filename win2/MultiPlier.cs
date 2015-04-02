@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CircuitCalculation
+﻿namespace CircuitCalculation
 {
+    using System;
+
     /// <summary>
     /// Множитель величины.
     /// </summary>
@@ -19,6 +16,5 @@ namespace CircuitCalculation
         {
             return Math.Pow(10, (int)prefix);
         }
-
     }
 }

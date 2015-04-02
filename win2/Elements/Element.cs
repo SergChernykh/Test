@@ -6,20 +6,38 @@
 
     using CircuitCalculation.Circuit;
 
-    public class Element : ICircuit
+    /// <summary>
+    /// Элемент схемы.
+    /// </summary>
+    public abstract class Element : ICircuit
     {
+        /// <summary>
+        /// Имя.
+        /// </summary>
         string _name;
 
+        /// <summary>
+        /// Номинал.
+        /// </summary>
         double _value;
 
+        /// <summary>
+        /// Изображение.
+        /// </summary>
         protected Image _image;
-       
+        
+        /// <summary>
+        /// Имя элемента.
+        /// </summary>
         public string Name
         {
             get { return _name; }
             set { _name = value; }
         }
 
+        /// <summary>
+        /// Номинал элемента.
+        /// </summary>
         public double Value
         {
             get { return _value; }
@@ -30,7 +48,6 @@
                     _value = value;
                     if (CircuitChanged != null)
                     {
-                        //TODO: это загорелось событие серкита или элемента?
                         CircuitChanged(this, null);
                     }
                 }
@@ -41,28 +58,42 @@
             }
         }
 
-
-        //TODO: где xml-комментарий?
-        
+        /// <summary>
+        /// Родительская цепь.
+        /// </summary>
         public ICircuit ParentCircuit { get; set; }
-        //TODO: где xml-комментарий?
         
+        /// <summary>
+        /// Подсоединения.
+        /// </summary>
         public EventDrivenList<ICircuit> SubCircuits { get { return null; } }
-        //TODO: где xml-комментарий?
         
-        //TODO: Такое событие есть и в ICircuit, и в IElement. Это относится к какому?
+        /// <summary>
+        /// Зажигается при изменениях в цепи.
+        /// </summary>
         public event EventHandler CircuitChanged;
         
-
-
-        public virtual Complex[] CalculateZ(double[] frequencies)
+        /// <summary>
+        /// Вычислить импеданс.
+        /// </summary>
+        /// <param name="frequencies">Расчетные частоты.</param>
+        /// <returns>Рассчитанный импеданс.</returns>
+        public abstract Complex[] CalculateZ(double[] frequencies);
+        
+        /// <summary>
+        /// Отрисовать элемент.
+        /// </summary>
+        /// <param name="graphic">Область отрисовки.</param>
+        /// <param name="pointBegin">Начальная точка.</param>
+        /// <param name="height"></param>
+        /// <param name="width"></param>
+        public void Paint(Graphics graphic, Point pointBegin, ref float height, ref float width)
         {
-            throw new NotImplementedException();
+            
+            graphic.DrawLine(Pens.Black, pointBegin.X , pointBegin.Y, pointBegin.X + 25, pointBegin.Y);
+            graphic.DrawImage(_image, pointBegin.X + 25, pointBegin.Y - 25, 50, 50);
+            graphic.DrawLine(Pens.Black, pointBegin.X + 75, pointBegin.Y, pointBegin.X + 100, pointBegin.Y);
         }
-
-        public void Paint(Graphics graphic, Point pointBegin, Point pointEnd)
-        {
-            graphic.DrawImage(_image, pointBegin.X, pointBegin.Y - 25, 50, 50);
-        }
+        
     }
 }

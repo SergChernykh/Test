@@ -1,29 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using System.Numerics;
-
-namespace CircuitCalculation.Elements
+﻿namespace CircuitCalculation.Elements
 {
-    using System.Drawing;
+    using System;
+    using System.Numerics;
 
     using CircuitCalculation.Circuit;
-    //TODO: Точки в конце xml-комментариев
+    
     /// <summary>
-    /// Конденсатор
+    /// Конденсатор.
     /// </summary>
     public class Capacitor : Element
     {
-        
-        //TODO: где xml-комментарий?
+        /// <summary>
+        /// Конструктор элемента.
+        /// </summary>
+        /// <param name="parentCircuit">Родительская цепь.</param>
         public Capacitor(ICircuit parentCircuit)
         {
             ParentCircuit = parentCircuit;
-            //TODO: странно, что рисунок конденсатора единственный в jpg, остальные в png
             _image = global::CircuitCalculation.Properties.Resources.Capacitor;
         }
-        //TODO: где xml-комментарий?
+
+        /// <summary>
+        /// Вычислить импеданс.
+        /// </summary>
+        /// <param name="frequencies">Расчетные частоты.</param>
+        /// <returns>Рассчитанный импеданс.</returns>
         public override Complex[] CalculateZ(double[] frequencies)
         {
             Complex[] z = new Complex[frequencies.Length];
@@ -33,8 +34,5 @@ namespace CircuitCalculation.Elements
             }
             return z;
         }
-
-        
-       
     }
 }

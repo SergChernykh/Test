@@ -61,28 +61,26 @@ namespace CircuitCalculation.Circuit
             return z;
         }
 
-
-
-
-        public void Paint(Graphics graphic, Point pointBegin, Point pointEnd)
+        public void Paint(Graphics graphic, Point pointBegin, ref float height, ref float width)
         {
+            if (SubCircuits.Count % 2 == 0)
+            {
+                pointBegin.Y += 25;
+            }
             foreach (ICircuit subCircuit in SubCircuits)
             {
+                pointBegin.Y += (int)(50 * Math.Pow(-1, SubCircuits.IndexOf(subCircuit)) * SubCircuits.IndexOf(subCircuit));
 
                 if (subCircuit != SubCircuits[0])
                 {
-                    //pointEnd.X += 50;
-                    pointBegin.Y -= 50;
-                    pointEnd.Y -= 50;
-                    Paint(graphic, pointBegin, pointEnd);
-                    graphic.DrawLine(Pens.Black, pointBegin.X - 2, pointBegin.Y, pointBegin.X - 2, pointBegin.Y + 50);
-                    graphic.DrawLine(Pens.Black, pointEnd.X + 2, pointEnd.Y, pointEnd.X + 2, pointEnd.Y + 50);
+                    subCircuit.Paint(graphic, pointBegin, ref height, ref width);
+                    graphic.DrawLine(Pens.Black, pointBegin.X, pointBegin.Y, pointBegin.X, pointBegin.Y - 50 * (int)Math.Pow(-1, SubCircuits.IndexOf(subCircuit)));
+                    graphic.DrawLine(Pens.Black, pointBegin.X + 100, pointBegin.Y, pointBegin.X + 100, pointBegin.Y - 50 * (int)Math.Pow(-1, SubCircuits.IndexOf(subCircuit)));
                 }
                 else
                 {
-                    Paint(graphic, pointBegin, pointEnd);
+                    subCircuit.Paint(graphic, pointBegin, ref height, ref width);
                 }
-                pointEnd = pointBegin;
             }
         }
     }

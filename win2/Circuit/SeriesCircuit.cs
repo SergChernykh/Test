@@ -59,15 +59,21 @@ namespace CircuitCalculation.Circuit
         }
 
 
-        public void Paint(Graphics graphic, Point pointBegin, Point pointEnd)
+        public void Paint(Graphics graphic, Point pointBegin, ref float height, ref float width)
         {
             foreach (ICircuit subCircuit in SubCircuits)
             {
-                Paint(graphic, pointBegin, pointEnd);
+                subCircuit.Paint(graphic, pointBegin, ref height, ref width);
                 pointBegin.X += 100;
-                pointEnd.X += 50;
-                graphic.DrawLine(Pens.Black, pointBegin, pointEnd);
-                pointEnd = pointBegin;
+            }
+            
+            if (width < SubCircuits.Count * 100)
+            {
+                width = SubCircuits.Count * 100;
+            }
+            else
+            {
+                graphic.DrawLine(Pens.Black, pointBegin.X, pointBegin.Y, pointBegin.X + width - SubCircuits.Count * 100, pointBegin.Y);
             }
         }
     }

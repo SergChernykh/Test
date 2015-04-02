@@ -1,18 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CircuitCalculation
+﻿namespace CircuitCalculation
 {
-    //TODO: где xml-комментарий?
+    using System;
+    using System.Collections.Generic;
+
+    /// <summary>
+    /// Представляет список объектов, доступных по индексу. Поддерживает события.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class EventDrivenList<T> : List<T>
     {
-        //TODO: где xml-комментарий?
+        /// <summary>
+        /// Зажигается при добавлении элемента.
+        /// </summary>
         public event EventHandler ItemAdded;
-        //TODO: где xml-комментарий?
+        
+        /// <summary>
+        /// Зажигается при удалении элемента.
+        /// </summary>
         public event EventHandler ItemRemoved;
-        //TODO: где xml-комментарий?
+        
+        /// <summary>
+        /// Добавляет элемент в конец списка.
+        /// </summary>
+        /// <param name="item">Объект для добавления в список.</param>
         public new void Add(T item)
         {
             base.Add(item);
@@ -21,7 +31,12 @@ namespace CircuitCalculation
                 ItemAdded(this, null);
             }
         }
-        //TODO: где xml-комментарий?
+        
+        /// <summary>
+        /// Удаляет первое вхождение элемента из списка.
+        /// </summary>
+        /// <param name="item">Элемент, который требуется удалить.</param>
+        /// <returns>Результат удаления.</returns>
         public new bool Remove(T item)
         {
             if (ItemRemoved != null)
@@ -30,7 +45,11 @@ namespace CircuitCalculation
             }
             return base.Remove(item);
         }
-        //TODO: где xml-комментарий?
+        
+        /// <summary>
+        /// Удаляет элемент списка с указанным индексом. 
+        /// </summary>
+        /// <param name="index">Индекс</param>
         public new void RemoveAt(int index)
         {
             base.RemoveAt(index);

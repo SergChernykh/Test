@@ -1,6 +1,8 @@
 ﻿namespace CircuitCalculation
 {
-    //TODO: где xml-комментарий?
+    /// <summary>
+    /// Перечисление приставок для величин СИ.
+    /// </summary>
     public enum PrefixType
     {
         Nano = -9,
