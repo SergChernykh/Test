@@ -11,7 +11,9 @@ using CircuitCalculation.Elements;
 
 namespace CircuitCalculation
 {
-    //TODO: xml-комментарий?
+    /// <summary>
+    /// Форма редактироваия элемента.
+    /// </summary>
     public partial class EditElementForm : Form
     {
         //TODO: xml-комментарий?
@@ -20,7 +22,7 @@ namespace CircuitCalculation
         private readonly Dictionary<Type, string> TypeOfElement;
 
         //TODO: xml-комментарий?
-        //TODO: именование
+        
         private Element _element;
 
         public EditElementForm(Element element)
@@ -28,17 +30,15 @@ namespace CircuitCalculation
             InitializeComponent();
 
             this._element = element;
-            //TODO: упростить?
-            //TODO: ToString
             //TODO: Enum.GetValues?
             Prefix = new Dictionary<PrefixType, string>();
-            Prefix.Add(PrefixType.Giga, "Giga");
-            Prefix.Add(PrefixType.Mega, "Mega");
-            Prefix.Add(PrefixType.Kilo, "Kilo");
-            Prefix.Add(PrefixType.Not, "Not");
-            Prefix.Add(PrefixType.Mili, "Mili");
-            Prefix.Add(PrefixType.Micro, "Micro");
-            Prefix.Add(PrefixType.Nano, "Nano");
+            Prefix.Add(PrefixType.Giga, PrefixType.Giga.ToString());
+            Prefix.Add(PrefixType.Mega, PrefixType.Mega.ToString());
+            Prefix.Add(PrefixType.Kilo, PrefixType.Kilo.ToString());
+            Prefix.Add(PrefixType.Not, PrefixType.Not.ToString());
+            Prefix.Add(PrefixType.Mili, PrefixType.Mili.ToString());
+            Prefix.Add(PrefixType.Micro, PrefixType.Micro.ToString());
+            Prefix.Add(PrefixType.Nano, PrefixType.Nano.ToString());
 
             TypeOfElement = new Dictionary<Type, string>();
             TypeOfElement.Add(typeof(Capacitor), "Конденсатор, Ф");
@@ -51,15 +51,12 @@ namespace CircuitCalculation
             }
         }
 
-        //TODO: пустые строки
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
-        //TODO: пустые строки
-        //TODO: пустые строки
         private void buttonOK_Click(object sender, EventArgs e)
         {
             try
@@ -97,13 +94,7 @@ namespace CircuitCalculation
 
         private void textBoxValueOfElement_KeyPress(object sender, KeyPressEventArgs e)
         {
-            //TODO: лучше сравнивать не с ASCII-кодом, а с конкретным символом. Читаемость!
-            //TODO: упростить?
-            if ((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8 && e.KeyChar != 46)
-            {
-                e.Handled = true;
-            }
+            e.Handled  = (e.KeyChar < '0' || e.KeyChar > '9') && e.KeyChar != 8 && e.KeyChar != '.';
         }
     }
-    //TODO: пустые строки
 }

@@ -3,6 +3,7 @@
     using System;
     using System.Numerics;
     using System.Drawing;
+    using System.Collections;
 
     /// <summary>
     /// Цепь элементов.
@@ -36,8 +37,7 @@
         /// </summary>
         /// <param name="graphic"></param>
         /// <param name="pointBegin"></param>
-        /// <param name="height"></param>
-        /// <param name="width"></param>
-        void Paint(Graphics graphic, Point pointBegin, ref float height, ref float width);
+        /// <param name="pointEnd"></param>
+        void Paint(Graphics graphic, Point pointBegin, ref Point pointEnd);
     }
 }

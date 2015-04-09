@@ -10,20 +10,26 @@ using CircuitCalculation.Elements;
 
 namespace CircuitCalculation.Circuit
 {
-    //TODO: Точки в конце xml-комментариев
     /// <summary>
-    /// Параллельное соединение
+    /// Параллельное соединение.
     /// </summary>
-    class ParallelCircuit : ICircuit
+    public class ParallelCircuit : ICircuit
     {
-        //TODO: где xml-комментарий?
+        /// <summary>
+        /// 
+        /// </summary>
         public EventDrivenList<ICircuit> SubCircuits { get; set; }
-        //TODO: где xml-комментарий?
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public ICircuit ParentCircuit { get; set; }
-        //TODO: где xml-комментарий?
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public event EventHandler CircuitChanged;
 
-        
         public ParallelCircuit(ICircuit parentCircuit)
         {
             SubCircuits = new EventDrivenList<ICircuit>();
@@ -39,7 +45,12 @@ namespace CircuitCalculation.Circuit
                 CircuitChanged(this, null);
             }
         }
-        //TODO: где xml-комментарий?
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="frequencies"></param>
+        /// <returns></returns>
         public Complex[] CalculateZ(double[] frequencies)
         {
             Complex[] z = new Complex[frequencies.Length];
@@ -61,27 +72,39 @@ namespace CircuitCalculation.Circuit
             return z;
         }
 
-        public void Paint(Graphics graphic, Point pointBegin, ref float height, ref float width)
+        public void Paint(Graphics graphic, Point pointBegin, ref Point pointEnd)
         {
-            if (SubCircuits.Count % 2 == 0)
+            pointBegin.Y -= 25 * (SubCircuits.Count - 1);
+            
+            if (this.ParentCircuit != null)
             {
-                pointBegin.Y += 25;
+                //pointBegin.Y += 25 * (SubCircuits.Count - 1);
             }
-            foreach (ICircuit subCircuit in SubCircuits)
+            foreach (var subCircuit in SubCircuits)
             {
-                pointBegin.Y += (int)(50 * Math.Pow(-1, SubCircuits.IndexOf(subCircuit)) * SubCircuits.IndexOf(subCircuit));
+                pointEnd = pointBegin;
+                subCircuit.Paint(graphic, pointBegin, ref pointEnd);
+                pointBegin.Y += 50;
 
-                if (subCircuit != SubCircuits[0])
-                {
-                    subCircuit.Paint(graphic, pointBegin, ref height, ref width);
-                    graphic.DrawLine(Pens.Black, pointBegin.X, pointBegin.Y, pointBegin.X, pointBegin.Y - 50 * (int)Math.Pow(-1, SubCircuits.IndexOf(subCircuit)));
-                    graphic.DrawLine(Pens.Black, pointBegin.X + 100, pointBegin.Y, pointBegin.X + 100, pointBegin.Y - 50 * (int)Math.Pow(-1, SubCircuits.IndexOf(subCircuit)));
-                }
-                else
-                {
-                    subCircuit.Paint(graphic, pointBegin, ref height, ref width);
-                }
+                graphic.DrawLine(Pens.Black, pointBegin.X, pointBegin.Y, pointBegin.X, pointBegin.Y - 50 * (int)Math.Pow(-1, SubCircuits.IndexOf(subCircuit)));
+                graphic.DrawLine(Pens.Black, pointEnd.X, pointEnd.Y, pointEnd.X, pointBegin.Y - 50 * (int)Math.Pow(-1, SubCircuits.IndexOf(subCircuit)));
             }
+            //for (int i = 0; i < SubCircuits.Count; i++)
+            //{
+            //    pointEnd = pointBegin;
+            //    SubCircuits[i].Paint(graphic, pointBegin, ref pointEnd);
+            //    pointBegin.Y += 50;
+
+            //    graphic.DrawLine(Pens.Black, pointBegin.X, pointBegin.Y, pointBegin.X, pointBegin.Y - 50 * (int)Math.Pow(-1, SubCircuits.IndexOf(SubCircuits[i])));
+            //    if (i != 0)
+            //    {
+            //        if (SubCircuits[i].SubCircuits.Count > SubCircuits[i - 1].SubCircuits.Count)
+            //        {
+            //            graphic.DrawLine(Pens.Black, pointEnd.X, pointEnd.Y, pointEnd.X, pointBegin.Y - 50 * (int)Math.Pow(-1, SubCircuits.IndexOf(SubCircuits[i])));
+            //            graphic.DrawLine(Pens.Black, pointEnd.X, pointBegin.Y - 50 * (int)Math.Pow(-1, SubCircuits.IndexOf(SubCircuits[i])), pointEnd.X - 100 * (SubCircuits[i].SubCircuits.Count - SubCircuits[i - 1].SubCircuits.Count), pointBegin.Y - 50 * (int)Math.Pow(-1, SubCircuits.IndexOf(SubCircuits[i])));
+            //        }
+            //    }
+            //}
         }
     }
 }

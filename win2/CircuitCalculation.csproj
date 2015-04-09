@@ -93,9 +93,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Capacitor.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\Inductor.png" />
   </ItemGroup>
   <ItemGroup>

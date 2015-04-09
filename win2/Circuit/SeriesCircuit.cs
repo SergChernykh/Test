@@ -9,11 +9,10 @@ using CircuitCalculation.Elements;
 
 namespace CircuitCalculation.Circuit
 {
-    //TODO: Точки в конце xml-комментариев
     /// <summary>
-    /// Последовательное соединение
+    /// Последовательное соединение.
     /// </summary>
-    class SeriesCircuit : ICircuit
+    public class SeriesCircuit : ICircuit
     {
         //TODO: где xml-комментарий?
         public EventDrivenList<ICircuit> SubCircuits { get; set; }
@@ -58,24 +57,13 @@ namespace CircuitCalculation.Circuit
             return z;
         }
 
-
-        public void Paint(Graphics graphic, Point pointBegin, ref float height, ref float width)
+        public void Paint(Graphics graphic, Point pointBegin, ref Point pointEnd)
         {
-            foreach (ICircuit subCircuit in SubCircuits)
+            foreach (var subCircuit in SubCircuits)
             {
-                subCircuit.Paint(graphic, pointBegin, ref height, ref width);
+                subCircuit.Paint(graphic, pointBegin, ref pointEnd);
                 pointBegin.X += 100;
-            }
-            
-            if (width < SubCircuits.Count * 100)
-            {
-                width = SubCircuits.Count * 100;
-            }
-            else
-            {
-                graphic.DrawLine(Pens.Black, pointBegin.X, pointBegin.Y, pointBegin.X + width - SubCircuits.Count * 100, pointBegin.Y);
-            }
+            }           
         }
-    }
-        
+    }    
 }

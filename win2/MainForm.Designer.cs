@@ -45,6 +45,9 @@
             this.AddInductorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.EditOfElementToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridViewFreq = new System.Windows.Forms.DataGridView();
+            this.ColumnFrequence = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnPrefix = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.ColumnImpedance = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonExit = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -54,9 +57,9 @@
             this.treeViewCircuit = new System.Windows.Forms.TreeView();
             this.buttonNewSeriesCircuit = new System.Windows.Forms.Button();
             this.buttonNewParallelCircuit = new System.Windows.Forms.Button();
-            this.ColumnFrequence = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnPrefix = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.ColumnImpedance = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.buttonCircuitOne = new System.Windows.Forms.Button();
+            this.buttonCircuitTwo = new System.Windows.Forms.Button();
+            this.buttonCircuitThree = new System.Windows.Forms.Button();
             this.contextMenuStripEditConnection.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewFreq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFrequencies)).BeginInit();
@@ -187,6 +190,24 @@
             this.dataGridViewFreq.Size = new System.Drawing.Size(284, 247);
             this.dataGridViewFreq.TabIndex = 3;
             // 
+            // ColumnFrequence
+            // 
+            this.ColumnFrequence.HeaderText = "Частота";
+            this.ColumnFrequence.Name = "ColumnFrequence";
+            // 
+            // ColumnPrefix
+            // 
+            this.ColumnPrefix.HeaderText = "";
+            this.ColumnPrefix.Name = "ColumnPrefix";
+            this.ColumnPrefix.Width = 60;
+            // 
+            // ColumnImpedance
+            // 
+            this.ColumnImpedance.HeaderText = "Импеданс";
+            this.ColumnImpedance.Name = "ColumnImpedance";
+            this.ColumnImpedance.ReadOnly = true;
+            this.ColumnImpedance.Width = 120;
+            // 
             // buttonOK
             // 
             this.buttonOK.Location = new System.Drawing.Point(316, 513);
@@ -260,7 +281,7 @@
             this.buttonNewSeriesCircuit.TabIndex = 20;
             this.buttonNewSeriesCircuit.Text = "Последовательная цепь";
             this.buttonNewSeriesCircuit.UseVisualStyleBackColor = true;
-            this.buttonNewSeriesCircuit.Click += new System.EventHandler(this.buttonNewCircuit_Click);
+            this.buttonNewSeriesCircuit.Click += new System.EventHandler(this.buttonNewSeriesCircuit_Click);
             // 
             // buttonNewParallelCircuit
             // 
@@ -272,29 +293,44 @@
             this.buttonNewParallelCircuit.UseVisualStyleBackColor = true;
             this.buttonNewParallelCircuit.Click += new System.EventHandler(this.buttonNewParallelCircuit_Click);
             // 
-            // ColumnFrequence
+            // buttonCircuitOne
             // 
-            this.ColumnFrequence.HeaderText = "Частота";
-            this.ColumnFrequence.Name = "ColumnFrequence";
+            this.buttonCircuitOne.Location = new System.Drawing.Point(382, 12);
+            this.buttonCircuitOne.Name = "buttonCircuitOne";
+            this.buttonCircuitOne.Size = new System.Drawing.Size(75, 23);
+            this.buttonCircuitOne.TabIndex = 22;
+            this.buttonCircuitOne.Text = "Цепь 1";
+            this.buttonCircuitOne.UseVisualStyleBackColor = true;
+            this.buttonCircuitOne.Click += new System.EventHandler(this.buttonCircuitOne_Click);
             // 
-            // ColumnPrefix
+            // buttonCircuitTwo
             // 
-            this.ColumnPrefix.HeaderText = "";
-            this.ColumnPrefix.Name = "ColumnPrefix";
-            this.ColumnPrefix.Width = 60;
+            this.buttonCircuitTwo.Location = new System.Drawing.Point(478, 12);
+            this.buttonCircuitTwo.Name = "buttonCircuitTwo";
+            this.buttonCircuitTwo.Size = new System.Drawing.Size(75, 23);
+            this.buttonCircuitTwo.TabIndex = 23;
+            this.buttonCircuitTwo.Text = "Цепь 2";
+            this.buttonCircuitTwo.UseVisualStyleBackColor = true;
+            this.buttonCircuitTwo.Click += new System.EventHandler(this.buttonCircuitTwo_Click);
             // 
-            // ColumnImpedance
+            // buttonCircuitThree
             // 
-            this.ColumnImpedance.HeaderText = "Импеданс";
-            this.ColumnImpedance.Name = "ColumnImpedance";
-            this.ColumnImpedance.ReadOnly = true;
-            this.ColumnImpedance.Width = 120;
+            this.buttonCircuitThree.Location = new System.Drawing.Point(580, 12);
+            this.buttonCircuitThree.Name = "buttonCircuitThree";
+            this.buttonCircuitThree.Size = new System.Drawing.Size(75, 23);
+            this.buttonCircuitThree.TabIndex = 24;
+            this.buttonCircuitThree.Text = "Цепь 3";
+            this.buttonCircuitThree.UseVisualStyleBackColor = true;
+            this.buttonCircuitThree.Click += new System.EventHandler(this.buttonCircuitThree_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(997, 567);
+            this.Controls.Add(this.buttonCircuitThree);
+            this.Controls.Add(this.buttonCircuitTwo);
+            this.Controls.Add(this.buttonCircuitOne);
             this.Controls.Add(this.buttonNewParallelCircuit);
             this.Controls.Add(this.buttonNewSeriesCircuit);
             this.Controls.Add(this.treeViewCircuit);
@@ -347,6 +383,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnFrequence;
         private System.Windows.Forms.DataGridViewComboBoxColumn ColumnPrefix;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnImpedance;
+        private System.Windows.Forms.Button buttonCircuitOne;
+        private System.Windows.Forms.Button buttonCircuitTwo;
+        private System.Windows.Forms.Button buttonCircuitThree;
 
 
 

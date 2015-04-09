@@ -80,20 +80,13 @@
         /// <returns>Рассчитанный импеданс.</returns>
         public abstract Complex[] CalculateZ(double[] frequencies);
         
-        /// <summary>
-        /// Отрисовать элемент.
-        /// </summary>
-        /// <param name="graphic">Область отрисовки.</param>
-        /// <param name="pointBegin">Начальная точка.</param>
-        /// <param name="height"></param>
-        /// <param name="width"></param>
-        public void Paint(Graphics graphic, Point pointBegin, ref float height, ref float width)
+  
+        public void Paint(Graphics graphic, Point pointBegin, ref Point pointEnd)
         {
-            
-            graphic.DrawLine(Pens.Black, pointBegin.X , pointBegin.Y, pointBegin.X + 25, pointBegin.Y);
+            graphic.DrawLine(Pens.Black, pointBegin.X, pointBegin.Y, pointBegin.X + 25, pointBegin.Y);
             graphic.DrawImage(_image, pointBegin.X + 25, pointBegin.Y - 25, 50, 50);
             graphic.DrawLine(Pens.Black, pointBegin.X + 75, pointBegin.Y, pointBegin.X + 100, pointBegin.Y);
+            pointEnd.X += 100;
         }
-        
     }
 }
