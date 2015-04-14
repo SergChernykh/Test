@@ -25,9 +25,9 @@ namespace CircuitCalculation.Circuit
         public SeriesCircuit(ICircuit parentCircuit)
         {
             SubCircuits = new EventDrivenList<ICircuit>();
+            this.ParentCircuit = parentCircuit;
             SubCircuits.ItemAdded += SubCircuits_ItemChanged;
             SubCircuits.ItemRemoved += SubCircuits_ItemChanged;
-            ParentCircuit = parentCircuit;
         }
 
         private void SubCircuits_ItemChanged(object sender, EventArgs e)
@@ -57,13 +57,36 @@ namespace CircuitCalculation.Circuit
             return z;
         }
 
-        public void Paint(Graphics graphic, Point pointBegin, ref Point pointEnd)
+        public Image GetImage()
         {
-            foreach (var subCircuit in SubCircuits)
+            Image[] array = new Bitmap[SubCircuits.Count];
+            int height = 0;
+            int width = 0;
+            for (int i = 0; i < SubCircuits.Count; i++)
             {
-                subCircuit.Paint(graphic, pointBegin, ref pointEnd);
-                pointBegin.X += 100;
-            }           
+                array[i] = SubCircuits[i].GetImage();
+
+                if (array[i].Height > height)
+                {
+                    height = array[i].Height;
+                }
+                width += array[i].Width + 50;
+            }
+            
+            Bitmap image = new Bitmap(width, height);
+            Graphics graphic = Graphics.FromImage(image);
+            Point pointBegin = new Point(0, 0);
+
+            foreach (var item in array)
+            {
+                graphic.DrawLine(Pens.Black, pointBegin.X, height / 2, pointBegin.X + 25, height / 2);
+                pointBegin.X += 25;
+                graphic.DrawImage(item, pointBegin.X, pointBegin.Y + (height - item.Height) / 2, item.Width, item.Height);
+                pointBegin.X += item.Width;
+                graphic.DrawLine(Pens.Black, pointBegin.X, height / 2, pointBegin.X + 25, height / 2);
+                pointBegin.X += 25;
+            }
+            return image;
         }
     }    
 }

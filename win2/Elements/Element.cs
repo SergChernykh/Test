@@ -79,14 +79,10 @@
         /// <param name="frequencies">Расчетные частоты.</param>
         /// <returns>Рассчитанный импеданс.</returns>
         public abstract Complex[] CalculateZ(double[] frequencies);
-        
-  
-        public void Paint(Graphics graphic, Point pointBegin, ref Point pointEnd)
+       
+        public Image GetImage()
         {
-            graphic.DrawLine(Pens.Black, pointBegin.X, pointBegin.Y, pointBegin.X + 25, pointBegin.Y);
-            graphic.DrawImage(_image, pointBegin.X + 25, pointBegin.Y - 25, 50, 50);
-            graphic.DrawLine(Pens.Black, pointBegin.X + 75, pointBegin.Y, pointBegin.X + 100, pointBegin.Y);
-            pointEnd.X += 100;
+            return _image;
         }
     }
 }

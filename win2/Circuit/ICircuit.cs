@@ -33,11 +33,9 @@
         event EventHandler CircuitChanged;
 
         /// <summary>
-        /// Отрисовать цепь.
+        /// 
         /// </summary>
-        /// <param name="graphic"></param>
-        /// <param name="pointBegin"></param>
-        /// <param name="pointEnd"></param>
-        void Paint(Graphics graphic, Point pointBegin, ref Point pointEnd);
+        /// <returns></returns>
+        Image GetImage();
     }
 }

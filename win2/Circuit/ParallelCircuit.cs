@@ -33,9 +33,9 @@ namespace CircuitCalculation.Circuit
         public ParallelCircuit(ICircuit parentCircuit)
         {
             SubCircuits = new EventDrivenList<ICircuit>();
+            this.ParentCircuit = parentCircuit;
             SubCircuits.ItemAdded += SubCircuits_ItemChanged;
             SubCircuits.ItemRemoved += SubCircuits_ItemChanged;
-            ParentCircuit = parentCircuit;
         }
 
         private void SubCircuits_ItemChanged(object sender, EventArgs e)
@@ -72,39 +72,36 @@ namespace CircuitCalculation.Circuit
             return z;
         }
 
-        public void Paint(Graphics graphic, Point pointBegin, ref Point pointEnd)
+        public Image GetImage()
         {
-            pointBegin.Y -= 25 * (SubCircuits.Count - 1);
-            
-            if (this.ParentCircuit != null)
+            Image[] array = new Bitmap[SubCircuits.Count];
+            int height = 0;
+            int width = 0;
+            for (int i = 0; i < SubCircuits.Count; i++)
             {
-                //pointBegin.Y += 25 * (SubCircuits.Count - 1);
+                array[i] = SubCircuits[i].GetImage();
+
+                if (array[i].Width > width)
+                {
+                    width = array[i].Width + 50;
+                }
+                height += array[i].Height;
             }
-            foreach (var subCircuit in SubCircuits)
+
+            Bitmap image = new Bitmap(width, height);
+            Graphics graphic = Graphics.FromImage(image);
+            Point pointBegin = new Point(0, 0);
+
+            foreach (var item in array)
             {
-                pointEnd = pointBegin;
-                subCircuit.Paint(graphic, pointBegin, ref pointEnd);
-                pointBegin.Y += 50;
-
-                graphic.DrawLine(Pens.Black, pointBegin.X, pointBegin.Y, pointBegin.X, pointBegin.Y - 50 * (int)Math.Pow(-1, SubCircuits.IndexOf(subCircuit)));
-                graphic.DrawLine(Pens.Black, pointEnd.X, pointEnd.Y, pointEnd.X, pointBegin.Y - 50 * (int)Math.Pow(-1, SubCircuits.IndexOf(subCircuit)));
+                graphic.DrawLine(Pens.Black, pointBegin.X, pointBegin.Y + item.Height / 2, pointBegin.X + (width - item.Width) / 2, pointBegin.Y + item.Height / 2);
+                graphic.DrawImage(item, pointBegin.X + (width - item.Width) / 2, pointBegin.Y, item.Width, item.Height);
+                graphic.DrawLine(Pens.Black, pointBegin.X + (width + item.Width) / 2, pointBegin.Y + item.Height / 2, pointBegin.X + width, pointBegin.Y + item.Height / 2);
+                pointBegin.Y += item.Height;
             }
-            //for (int i = 0; i < SubCircuits.Count; i++)
-            //{
-            //    pointEnd = pointBegin;
-            //    SubCircuits[i].Paint(graphic, pointBegin, ref pointEnd);
-            //    pointBegin.Y += 50;
-
-            //    graphic.DrawLine(Pens.Black, pointBegin.X, pointBegin.Y, pointBegin.X, pointBegin.Y - 50 * (int)Math.Pow(-1, SubCircuits.IndexOf(SubCircuits[i])));
-            //    if (i != 0)
-            //    {
-            //        if (SubCircuits[i].SubCircuits.Count > SubCircuits[i - 1].SubCircuits.Count)
-            //        {
-            //            graphic.DrawLine(Pens.Black, pointEnd.X, pointEnd.Y, pointEnd.X, pointBegin.Y - 50 * (int)Math.Pow(-1, SubCircuits.IndexOf(SubCircuits[i])));
-            //            graphic.DrawLine(Pens.Black, pointEnd.X, pointBegin.Y - 50 * (int)Math.Pow(-1, SubCircuits.IndexOf(SubCircuits[i])), pointEnd.X - 100 * (SubCircuits[i].SubCircuits.Count - SubCircuits[i - 1].SubCircuits.Count), pointBegin.Y - 50 * (int)Math.Pow(-1, SubCircuits.IndexOf(SubCircuits[i])));
-            //        }
-            //    }
-            //}
+            graphic.DrawLine(Pens.Black, pointBegin.X, pointBegin.Y - array[array.Length - 1].Height / 2, pointBegin.X, pointBegin.Y - height + array[0].Height / 2);
+            graphic.DrawLine(Pens.Black, width - 1, pointBegin.Y - array[array.Length - 1].Height / 2, width - 1, pointBegin.Y - height + array[0].Height / 2);
+            return image;
         }
     }
 }

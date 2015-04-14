@@ -13,10 +13,9 @@
         /// <summary>
         /// Конструктор элемента.
         /// </summary>
-        /// <param name="parentCircuit">Родительская цепь.</param>
         public Capacitor(ICircuit parentCircuit)
         {
-            ParentCircuit = parentCircuit;
+            this.ParentCircuit = parentCircuit;
             _image = global::CircuitCalculation.Properties.Resources.Capacitor;
         }
 

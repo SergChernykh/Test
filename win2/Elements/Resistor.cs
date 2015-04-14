@@ -12,10 +12,9 @@
         /// <summary>
         /// Конструктор элемента.
         /// </summary>
-        /// <param name="parentCircuit">Родительская цепь.</param>
         public Resistor(ICircuit parentCircuit)
         {
-            ParentCircuit = parentCircuit;
+            this.ParentCircuit = parentCircuit;
             _image = global::CircuitCalculation.Properties.Resources.Resistor;
         }
 

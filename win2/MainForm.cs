@@ -298,14 +298,10 @@ namespace CircuitCalculation
 
         private void pictureBoxCircuit_Paint(object sender, PaintEventArgs e)
         {
-            Point pointBegin = new Point(0, this.pictureBoxCircuit.Height / 2);
-            Point pointEnd = new Point(pointBegin.X + 50, pointBegin.Y);
-            e.Graphics.DrawLine(Pens.Black, pointBegin, pointEnd);
-            pointBegin = pointEnd;
-            
             if (this._circuit != null)
             {
-                this._circuit.Paint(e.Graphics, pointBegin, ref pointEnd);
+                Point pointBegin = new Point(0, this._circuit.GetImage().Height / 2);
+                e.Graphics.DrawImage(this._circuit.GetImage(), pointBegin);
             }
         }
 
