@@ -33,5 +33,10 @@
             }
             return z;   
         }
+
+        public override string Description
+        {
+            get { return "Катушка"; }
+        }
     }
 }

@@ -19,8 +19,7 @@ namespace CircuitCalculation
         //TODO: xml-комментарий?
         private readonly Dictionary<PrefixType, string> Prefix;
         //TODO: xml-комментарий?
-        private readonly Dictionary<Type, string> TypeOfElement;
-
+        private readonly Dictionary<Type, string> TypeOfElement; ///убрать!
         //TODO: xml-комментарий?
         
         private Element _element;

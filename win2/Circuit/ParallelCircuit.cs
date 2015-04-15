@@ -103,5 +103,11 @@ namespace CircuitCalculation.Circuit
             graphic.DrawLine(Pens.Black, width - 1, pointBegin.Y - array[array.Length - 1].Height / 2, width - 1, pointBegin.Y - height + array[0].Height / 2);
             return image;
         }
+
+
+        public string Description
+        {
+            get { return "Параллельное"; }
+        }
     }
 }

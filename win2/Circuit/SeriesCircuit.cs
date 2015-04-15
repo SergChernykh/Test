@@ -79,6 +79,7 @@ namespace CircuitCalculation.Circuit
 
             foreach (var item in array)
             {
+                //Pen pen = new Pen(Color.Black, 3);
                 graphic.DrawLine(Pens.Black, pointBegin.X, height / 2, pointBegin.X + 25, height / 2);
                 pointBegin.X += 25;
                 graphic.DrawImage(item, pointBegin.X, pointBegin.Y + (height - item.Height) / 2, item.Width, item.Height);
@@ -87,6 +88,12 @@ namespace CircuitCalculation.Circuit
                 pointBegin.X += 25;
             }
             return image;
+        }
+
+
+        public string Description
+        {
+            get { return "Последовательное"; }
         }
     }    
 }

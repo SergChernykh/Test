@@ -84,5 +84,8 @@
         {
             return _image;
         }
+        
+        public abstract string Description { get; }
+        
     }
 }

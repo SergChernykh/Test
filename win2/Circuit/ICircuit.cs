@@ -37,5 +37,7 @@
         /// </summary>
         /// <returns></returns>
         Image GetImage();
+
+        string Description { get; }
     }
 }

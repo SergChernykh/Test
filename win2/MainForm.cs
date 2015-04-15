@@ -31,7 +31,7 @@ namespace CircuitCalculation
                                   "Параллельное"};
 
         //TODO: где xml-комментарий?
-        private readonly Dictionary<PrefixType, string> Prefix;
+        private readonly Dictionary<PrefixType, string> _prefix;
 
         //TODO: где xml-комментарий?
         
@@ -41,19 +41,19 @@ namespace CircuitCalculation
         private ICircuit _selectedCircuit;
         //TODO: где xml-комментарий?
         
-        private double[] frequencies;
+        private double[] _frequencies;
         public MainForm()
         {
             InitializeComponent();
-            Prefix = new Dictionary<PrefixType, string>();
-            Prefix.Add(PrefixType.Giga, PrefixType.Giga.ToString());
-            Prefix.Add(PrefixType.Mega, PrefixType.Mega.ToString());
-            Prefix.Add(PrefixType.Kilo, PrefixType.Kilo.ToString());
-            Prefix.Add(PrefixType.Not, PrefixType.Not.ToString());
-            Prefix.Add(PrefixType.Mili, PrefixType.Mili.ToString());
-            Prefix.Add(PrefixType.Micro, PrefixType.Micro.ToString());
-            Prefix.Add(PrefixType.Nano, PrefixType.Nano.ToString());
-            foreach (string str in Prefix.Values)
+            _prefix = new Dictionary<PrefixType, string>();
+            _prefix.Add(PrefixType.Giga, PrefixType.Giga.ToString());
+            _prefix.Add(PrefixType.Mega, PrefixType.Mega.ToString());
+            _prefix.Add(PrefixType.Kilo, PrefixType.Kilo.ToString());
+            _prefix.Add(PrefixType.Not, PrefixType.Not.ToString());
+            _prefix.Add(PrefixType.Mili, PrefixType.Mili.ToString());
+            _prefix.Add(PrefixType.Micro, PrefixType.Micro.ToString());
+            _prefix.Add(PrefixType.Nano, PrefixType.Nano.ToString());
+            foreach (string str in _prefix.Values)
             {
                 this.ColumnPrefix.Items.Add(str);
             }
@@ -77,17 +77,15 @@ namespace CircuitCalculation
                 {
                     this.dataGridViewFreq.Rows.RemoveAt(i - 1);
                 }
-
             }
         }
         private void Circuit_CircuitChanged(object sender, EventArgs e)
         {
-            if (frequencies != null)
+            if (_frequencies != null)
             {
                 Calculate();
             }
             this.pictureBoxCircuit.Invalidate();
-            
         }
 
         /// <summary>
@@ -95,22 +93,22 @@ namespace CircuitCalculation
         /// </summary>
         private void Calculate()
         {
-            var z = _circuit.CalculateZ(frequencies);
+            var z = _circuit.CalculateZ(_frequencies);
 
             for (int i = 0; i < this.dataGridViewFreq.RowCount; i++)
             {
-                this.dataGridViewFreq[2, i].Value = z[i];
+                this.dataGridViewFreq[this.ColumnImpedance.Index, i].Value = z[i];
             }
         }
         private void buttonOK_Click(object sender, EventArgs e)
         {       
-            frequencies = new double[this.dataGridViewFreq.RowCount];
+            _frequencies = new double[this.dataGridViewFreq.RowCount];
             for (int i = 0; i < this.dataGridViewFreq.RowCount; i++)
             {
                 try
                 {
-                    frequencies[i] = Convert.ToDouble(this.dataGridViewFreq[0, i].Value)*
-                        Multiplier.GetMultiplier((PrefixType)Enum.Parse(typeof(PrefixType), this.dataGridViewFreq[1, i].Value.ToString()));
+                    _frequencies[i] = Convert.ToDouble(this.dataGridViewFreq[this.ColumnFrequence.Index, i].Value)*
+                        Multiplier.GetMultiplier((PrefixType)Enum.Parse(typeof(PrefixType), this.dataGridViewFreq[this.ColumnPrefix.Index, i].Value.ToString()));
                 }
                 catch (FormatException)
                 {
@@ -137,12 +135,7 @@ namespace CircuitCalculation
                 {
                     _selectedCircuit = _selectedCircuit.SubCircuits[path[i]];
                 }
-            }
-
-            this.EditOfElementToolStripMenuItem.Enabled = _selectedCircuit is Element;
-            this.AddToolStripMenuItem.Enabled = !(_selectedCircuit is Element);
-            this.ChangeConectionToolStripMenuItem.Enabled = !(_selectedCircuit is Element);
-            
+            }  
         }
 
         //*********************************************************************************
@@ -152,20 +145,20 @@ namespace CircuitCalculation
         private void buttonNewParallelCircuit_Click(object sender, EventArgs e)
         {
             _circuit = new ParallelCircuit(null);
-            NewCircuit(1);
+            NewCircuit(_circuit.Description);
         }
         private void buttonNewSeriesCircuit_Click(object sender, EventArgs e)
         {
             _circuit = new SeriesCircuit(null);
-            NewCircuit(0);
+            NewCircuit(_circuit.Description);
         }
-        private void NewCircuit(int i)
+        private void NewCircuit(string description)
         {
             if (this.treeViewCircuit.Nodes.Count != 0)
             {
                 this.treeViewCircuit.Nodes.Remove(this.treeViewCircuit.Nodes[0]);
             }
-            TreeNode node = new TreeNode(Circuits[i]);
+            TreeNode node = new TreeNode(description);
             node.ContextMenuStrip = this.contextMenuStripEditConnection;
             this.treeViewCircuit.Nodes.Add(node);
 
@@ -307,61 +300,98 @@ namespace CircuitCalculation
 
         #endregion - Отрисовка цепи -
 
+        //************************************************************************************
+
+        #region - Программно генерируемые цепи -
+
         private void buttonCircuitOne_Click(object sender, EventArgs e)
         {
-            _circuit = new ParallelCircuit(null);
+            _circuit = new SeriesCircuit(null);
             _circuit.CircuitChanged += Circuit_CircuitChanged;
-            _circuit.SubCircuits.Add(new SeriesCircuit(_circuit));
-            _circuit.SubCircuits[0].SubCircuits.Add(new Resistor(_circuit.SubCircuits[0]));
-            _circuit.SubCircuits[0].SubCircuits.Add(new ParallelCircuit(_circuit.SubCircuits[0]));
-            _circuit.SubCircuits[0].SubCircuits[1].SubCircuits.Add(new Capacitor(_circuit.SubCircuits[0].SubCircuits[1]));
-            _circuit.SubCircuits[0].SubCircuits[1].SubCircuits.Add(new Resistor(_circuit.SubCircuits[0].SubCircuits[1]));
-
-            _circuit.SubCircuits.Add(new SeriesCircuit(_circuit));
-            _circuit.SubCircuits[1].SubCircuits.Add(new Resistor(_circuit.SubCircuits[1]));
-            _circuit.SubCircuits[1].SubCircuits.Add(new Inductor(_circuit.SubCircuits[1]));
-            _circuit.SubCircuits[1].SubCircuits.Add(new ParallelCircuit(_circuit.SubCircuits[1]));
-            _circuit.SubCircuits[1].SubCircuits[2].SubCircuits.Add(new Resistor(_circuit.SubCircuits[1].SubCircuits[2]));
-            _circuit.SubCircuits[1].SubCircuits[2].SubCircuits.Add(new Resistor(_circuit.SubCircuits[1].SubCircuits[2]));
-            
+            _circuit.SubCircuits.Add(new Resistor(_circuit));
+            _circuit.SubCircuits.Add(new Capacitor(_circuit));
+            _circuit.SubCircuits.Add(new Inductor(_circuit));
         }
 
         private void buttonCircuitTwo_Click(object sender, EventArgs e)
         {
             _circuit = new ParallelCircuit(null);
             _circuit.CircuitChanged += Circuit_CircuitChanged;
-            _circuit.SubCircuits.Add(new SeriesCircuit(_circuit));
-            _circuit.SubCircuits[0].SubCircuits.Add(new Resistor(_circuit.SubCircuits[0]));
-            _circuit.SubCircuits[0].SubCircuits.Add(new Capacitor(_circuit.SubCircuits[0]));
-           
-            _circuit.SubCircuits.Add(new SeriesCircuit(_circuit));
-            _circuit.SubCircuits[1].SubCircuits.Add(new Resistor(_circuit.SubCircuits[1]));
-            _circuit.SubCircuits[1].SubCircuits.Add(new Inductor(_circuit.SubCircuits[1]));
-            _circuit.SubCircuits[1].SubCircuits.Add(new Resistor(_circuit.SubCircuits[1]));
-
-            _circuit.SubCircuits.Add(new SeriesCircuit(_circuit));
-            _circuit.SubCircuits[2].SubCircuits.Add(new Capacitor(_circuit.SubCircuits[1]));
-            _circuit.SubCircuits[2].SubCircuits.Add(new ParallelCircuit(_circuit.SubCircuits[1]));
-            _circuit.SubCircuits[2].SubCircuits[1].SubCircuits.Add(new Resistor(_circuit.SubCircuits[2].SubCircuits[1]));
-            _circuit.SubCircuits[2].SubCircuits[1].SubCircuits.Add(new Resistor(_circuit.SubCircuits[2].SubCircuits[1]));
+            _circuit.SubCircuits.Add(new Resistor(_circuit));
+            _circuit.SubCircuits.Add(new Capacitor(_circuit));
+            _circuit.SubCircuits.Add(new Inductor(_circuit));
         }
 
         private void buttonCircuitThree_Click(object sender, EventArgs e)
         {
             _circuit = new SeriesCircuit(null);
             _circuit.CircuitChanged += Circuit_CircuitChanged;
-            _circuit.SubCircuits.Add(new ParallelCircuit(_circuit));
+            _circuit.SubCircuits.Add(new SeriesCircuit(_circuit));
             _circuit.SubCircuits[0].SubCircuits.Add(new Resistor(_circuit.SubCircuits[0]));
-            _circuit.SubCircuits[0].SubCircuits.Add(new ParallelCircuit(_circuit.SubCircuits[0]));
-            _circuit.SubCircuits[0].SubCircuits[1].SubCircuits.Add(new Capacitor(_circuit.SubCircuits[0].SubCircuits[1]));
-            _circuit.SubCircuits[0].SubCircuits[1].SubCircuits.Add(new Resistor(_circuit.SubCircuits[0].SubCircuits[1]));
+            _circuit.SubCircuits[0].SubCircuits.Add(new Capacitor(_circuit.SubCircuits[0]));
+            _circuit.SubCircuits[0].SubCircuits.Add(new Inductor(_circuit.SubCircuits[0]));
 
             _circuit.SubCircuits.Add(new ParallelCircuit(_circuit));
             _circuit.SubCircuits[1].SubCircuits.Add(new Resistor(_circuit.SubCircuits[1]));
             _circuit.SubCircuits[1].SubCircuits.Add(new Inductor(_circuit.SubCircuits[1]));
+            _circuit.SubCircuits[1].SubCircuits.Add(new Capacitor(_circuit.SubCircuits[1]));
+        }
+
+        private void buttonCircuitFour_Click(object sender, EventArgs e)
+        {
+            _circuit = new ParallelCircuit(null);
+            _circuit.CircuitChanged += Circuit_CircuitChanged;
+            _circuit.SubCircuits.Add(new SeriesCircuit(_circuit));
+            _circuit.SubCircuits[0].SubCircuits.Add(new Resistor(_circuit.SubCircuits[0]));
+            _circuit.SubCircuits[0].SubCircuits.Add(new ParallelCircuit(_circuit.SubCircuits[0]));
+            _circuit.SubCircuits[0].SubCircuits[1].SubCircuits.Add(new Capacitor(_circuit.SubCircuits[0].SubCircuits[1]));
+            _circuit.SubCircuits[0].SubCircuits[1].SubCircuits.Add(new Resistor(_circuit.SubCircuits[0].SubCircuits[1]));
+            _circuit.SubCircuits[0].SubCircuits[1].SubCircuits.Add(new Inductor(_circuit.SubCircuits[0].SubCircuits[1]));
+
+            _circuit.SubCircuits.Add(new SeriesCircuit(_circuit));
             _circuit.SubCircuits[1].SubCircuits.Add(new ParallelCircuit(_circuit.SubCircuits[1]));
-            _circuit.SubCircuits[1].SubCircuits[2].SubCircuits.Add(new Resistor(_circuit.SubCircuits[1].SubCircuits[2]));
-            _circuit.SubCircuits[1].SubCircuits[2].SubCircuits.Add(new Resistor(_circuit.SubCircuits[1].SubCircuits[2]));
+            _circuit.SubCircuits[1].SubCircuits[0].SubCircuits.Add(new Resistor(_circuit.SubCircuits[1].SubCircuits[0]));
+            _circuit.SubCircuits[1].SubCircuits[0].SubCircuits.Add(new Resistor(_circuit.SubCircuits[1].SubCircuits[0]));
+            _circuit.SubCircuits[1].SubCircuits.Add(new Resistor(_circuit.SubCircuits[1]));
+            _circuit.SubCircuits[1].SubCircuits.Add(new Inductor(_circuit.SubCircuits[1]));
+            _circuit.SubCircuits[1].SubCircuits.Add(new Capacitor(_circuit.SubCircuits[1]));
+        }
+
+        private void buttonCircuitFive_Click(object sender, EventArgs e)
+        {
+            _circuit = new SeriesCircuit(null);
+            _circuit.CircuitChanged += Circuit_CircuitChanged;
+            _circuit.SubCircuits.Add(new ParallelCircuit(_circuit));
+            _circuit.SubCircuits[0].SubCircuits.Add(new Resistor(_circuit.SubCircuits[0]));
+            _circuit.SubCircuits[0].SubCircuits.Add(new Capacitor(_circuit.SubCircuits[0]));
+
+            _circuit.SubCircuits.Add(new ParallelCircuit(_circuit));
+            _circuit.SubCircuits[1].SubCircuits.Add(new Resistor(_circuit.SubCircuits[1]));
+            _circuit.SubCircuits[1].SubCircuits.Add(new Inductor(_circuit.SubCircuits[1]));
+            _circuit.SubCircuits[1].SubCircuits.Add(new Resistor(_circuit.SubCircuits[1]));
+            _circuit.SubCircuits[1].SubCircuits.Add(new SeriesCircuit(_circuit.SubCircuits[1]));
+            _circuit.SubCircuits[1].SubCircuits[3].SubCircuits.Add(new Resistor(_circuit.SubCircuits[1].SubCircuits[3]));
+            _circuit.SubCircuits[1].SubCircuits[3].SubCircuits.Add(new Capacitor(_circuit.SubCircuits[1].SubCircuits[3]));
+
+            _circuit.SubCircuits.Add(new ParallelCircuit(_circuit));
+            _circuit.SubCircuits[2].SubCircuits.Add(new Capacitor(_circuit.SubCircuits[1]));
+            _circuit.SubCircuits[2].SubCircuits.Add(new SeriesCircuit(_circuit.SubCircuits[1]));
+            _circuit.SubCircuits[2].SubCircuits[1].SubCircuits.Add(new Resistor(_circuit.SubCircuits[2].SubCircuits[1]));
+            _circuit.SubCircuits[2].SubCircuits[1].SubCircuits.Add(new ParallelCircuit(_circuit.SubCircuits[2].SubCircuits[1]));
+            _circuit.SubCircuits[2].SubCircuits[1].SubCircuits[1].SubCircuits.Add(new Capacitor(_circuit.SubCircuits[2].SubCircuits[1].SubCircuits[1]));
+            _circuit.SubCircuits[2].SubCircuits[1].SubCircuits[1].SubCircuits.Add(new Inductor(_circuit.SubCircuits[2].SubCircuits[1].SubCircuits[1]));
+        }
+
+        #endregion //- Программно генерируемые цепи -
+
+        private void editElementToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void deleteElementToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
