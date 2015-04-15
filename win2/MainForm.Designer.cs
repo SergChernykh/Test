@@ -241,7 +241,7 @@
             this.editElementToolStripMenuItem,
             this.deleteElementToolStripMenuItem});
             this.contextMenuStripEditElement.Name = "contextMenuStripEditElement";
-            this.contextMenuStripEditElement.Size = new System.Drawing.Size(204, 70);
+            this.contextMenuStripEditElement.Size = new System.Drawing.Size(204, 48);
             // 
             // editElementToolStripMenuItem
             // 
@@ -260,8 +260,8 @@
             // DeleteConectionToolStripMenuItem
             // 
             this.DeleteConectionToolStripMenuItem.Name = "DeleteConectionToolStripMenuItem";
-            this.DeleteConectionToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
-            this.DeleteConectionToolStripMenuItem.Text = "Удалить соединение/элемент";
+            this.DeleteConectionToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.DeleteConectionToolStripMenuItem.Text = "Удалить соединение";
             this.DeleteConectionToolStripMenuItem.Click += new System.EventHandler(this.DeleteConnectionToolStripMenuItem_Click);
             // 
             // AddToolStripMenuItem
@@ -333,7 +333,7 @@
             this.AddToolStripMenuItem,
             this.DeleteConectionToolStripMenuItem});
             this.contextMenuStripEditConnection.Name = "contextMenuStrip1";
-            this.contextMenuStripEditConnection.Size = new System.Drawing.Size(238, 48);
+            this.contextMenuStripEditConnection.Size = new System.Drawing.Size(187, 70);
             // 
             // MainForm
             // 

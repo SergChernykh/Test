@@ -10,8 +10,9 @@
     public class Resistor : Element
     {
         /// <summary>
-        /// Конструктор элемента.
+        /// 
         /// </summary>
+        /// <param name="parentCircuit">Родительская цепь.</param>
         public Resistor(ICircuit parentCircuit)
         {
             this.ParentCircuit = parentCircuit;
@@ -33,6 +34,9 @@
             return z;
         }
 
+        /// <summary>
+        /// Текстовое описание.
+        /// </summary>
         public override string Description
         {
             get { return "Резистор"; }

@@ -14,14 +14,25 @@ namespace CircuitCalculation.Circuit
     /// </summary>
     public class SeriesCircuit : ICircuit
     {
-        //TODO: где xml-комментарий?
+        /// <summary>
+        /// Подсоединения.
+        /// </summary>
         public EventDrivenList<ICircuit> SubCircuits { get; set; }
-        //TODO: где xml-комментарий?
-        public ICircuit ParentCircuit { get; set; }
-        //TODO: где xml-комментарий?
-        public event EventHandler CircuitChanged;
-        //TODO: где xml-комментарий?
         
+        /// <summary>
+        /// Родительская цепь.
+        /// </summary>
+        public ICircuit ParentCircuit { get; set; }
+        
+        /// <summary>
+        /// Зажигается при изменениях в цепи.
+        /// </summary>
+        public event EventHandler CircuitChanged;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parentCircuit">Родительская цепь.</param>
         public SeriesCircuit(ICircuit parentCircuit)
         {
             SubCircuits = new EventDrivenList<ICircuit>();
@@ -38,7 +49,11 @@ namespace CircuitCalculation.Circuit
             }
         }
 
-        //TODO: где xml-комментарий?
+        /// <summary>
+        /// Рассчитать импеданс.
+        /// </summary>
+        /// <param name="frequencies">Список частот.</param>
+        /// <returns>Рассчитанный импеданс.</returns>
         public Complex[] CalculateZ(double[] frequencies)
         {
             Complex[] z = new Complex[frequencies.Length];
@@ -46,17 +61,21 @@ namespace CircuitCalculation.Circuit
             {
                 z[i] = 0;
             }
-
-            foreach (ICircuit circuit in SubCircuits)
+            for (int i = 0; i < frequencies.Length; i++)
             {
-                for (int i = 0; i < frequencies.Length; i++)
+                foreach (var circuit in SubCircuits)
                 {
                     z[i] += circuit.CalculateZ(frequencies)[i];
                 }
+
             }
             return z;
         }
-
+        
+        /// <summary>
+        /// Получить изображение цепи.
+        /// </summary>
+        /// <returns>Изображение.</returns>
         public Image GetImage()
         {
             Image[] array = new Bitmap[SubCircuits.Count];
@@ -66,31 +85,44 @@ namespace CircuitCalculation.Circuit
             {
                 array[i] = SubCircuits[i].GetImage();
 
-                if (array[i].Height > height)
+                if (array[i] != null)
                 {
-                    height = array[i].Height;
+                    if (array[i].Height > height)
+                    {
+                        height = array[i].Height;
+                    }
+                    width += array[i].Width + 50;
                 }
-                width += array[i].Width + 50;
             }
-            
-            Bitmap image = new Bitmap(width, height);
-            Graphics graphic = Graphics.FromImage(image);
-            Point pointBegin = new Point(0, 0);
-
-            foreach (var item in array)
+            if (height != 0 && width != 0)
             {
-                //Pen pen = new Pen(Color.Black, 3);
-                graphic.DrawLine(Pens.Black, pointBegin.X, height / 2, pointBegin.X + 25, height / 2);
-                pointBegin.X += 25;
-                graphic.DrawImage(item, pointBegin.X, pointBegin.Y + (height - item.Height) / 2, item.Width, item.Height);
-                pointBegin.X += item.Width;
-                graphic.DrawLine(Pens.Black, pointBegin.X, height / 2, pointBegin.X + 25, height / 2);
-                pointBegin.X += 25;
+                Bitmap image = new Bitmap(width, height);
+                Graphics graphic = Graphics.FromImage(image);
+                Point pointBegin = new Point(0, 0);
+
+                foreach (var item in array)
+                {
+                    if (item != null)
+                    {
+                        graphic.DrawLine(Pens.Black, pointBegin.X, height / 2, pointBegin.X + 25, height / 2);
+                        pointBegin.X += 25;
+                        graphic.DrawImage(item, pointBegin.X, pointBegin.Y + (height - item.Height) / 2, item.Width, item.Height);
+                        pointBegin.X += item.Width;
+                        graphic.DrawLine(Pens.Black, pointBegin.X, height / 2, pointBegin.X + 25, height / 2);
+                        pointBegin.X += 25;
+                    }   
+                }
+                return image;
             }
-            return image;
+            else
+            {
+                return null;
+            }
         }
 
-
+        /// <summary>
+        /// Текстовое описание.
+        /// </summary>
         public string Description
         {
             get { return "Последовательное"; }

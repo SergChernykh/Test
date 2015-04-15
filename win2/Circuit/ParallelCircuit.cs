@@ -16,20 +16,24 @@ namespace CircuitCalculation.Circuit
     public class ParallelCircuit : ICircuit
     {
         /// <summary>
-        /// 
+        /// Подсоединения.
         /// </summary>
         public EventDrivenList<ICircuit> SubCircuits { get; set; }
         
         /// <summary>
-        /// 
+        /// Родительская цепь.
         /// </summary>
         public ICircuit ParentCircuit { get; set; }
         
         /// <summary>
-        /// 
+        /// ЗАжигается при изменениях в цепи.
         /// </summary>
         public event EventHandler CircuitChanged;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parentCircuit">Родительская цепь.</param>
         public ParallelCircuit(ICircuit parentCircuit)
         {
             SubCircuits = new EventDrivenList<ICircuit>();
@@ -47,10 +51,10 @@ namespace CircuitCalculation.Circuit
         }
         
         /// <summary>
-        /// 
+        /// Рассчитать импеданс.
         /// </summary>
-        /// <param name="frequencies"></param>
-        /// <returns></returns>
+        /// <param name="frequencies">Список частот.</param>
+        /// <returns>Рассчитанный импеданс.</returns>
         public Complex[] CalculateZ(double[] frequencies)
         {
             Complex[] z = new Complex[frequencies.Length];
@@ -58,20 +62,21 @@ namespace CircuitCalculation.Circuit
             {
                 z[i] = 0;
             }
-            foreach (ICircuit circuit in SubCircuits)
-            {
-                for (int i = 0; i < frequencies.Length; i++)
-                {    
-                    z[i] += 1 / circuit.CalculateZ(frequencies)[i];
-                }
-            }
             for (int i = 0; i < frequencies.Length; i++)
             {
-                z[i] /= 1;
+                foreach (var circuit in SubCircuits)
+                {
+                    z[i] += 1 / circuit.CalculateZ(frequencies)[i];
+                }
+                z[i] = 1 / z[i];
             }
             return z;
         }
 
+        /// <summary>
+        /// Получить избражение.
+        /// </summary>
+        /// <returns>Изображение.</returns>
         public Image GetImage()
         {
             Image[] array = new Bitmap[SubCircuits.Count];
@@ -81,30 +86,45 @@ namespace CircuitCalculation.Circuit
             {
                 array[i] = SubCircuits[i].GetImage();
 
-                if (array[i].Width > width)
+                if (array[i] != null)
                 {
-                    width = array[i].Width + 50;
+                    if (array[i].Width > width)
+                    {
+                        width = array[i].Width + 50;
+                    }
+                    height += array[i].Height;
                 }
-                height += array[i].Height;
             }
 
-            Bitmap image = new Bitmap(width, height);
-            Graphics graphic = Graphics.FromImage(image);
-            Point pointBegin = new Point(0, 0);
-
-            foreach (var item in array)
+            if (height != 0 && width != 0)
             {
-                graphic.DrawLine(Pens.Black, pointBegin.X, pointBegin.Y + item.Height / 2, pointBegin.X + (width - item.Width) / 2, pointBegin.Y + item.Height / 2);
-                graphic.DrawImage(item, pointBegin.X + (width - item.Width) / 2, pointBegin.Y, item.Width, item.Height);
-                graphic.DrawLine(Pens.Black, pointBegin.X + (width + item.Width) / 2, pointBegin.Y + item.Height / 2, pointBegin.X + width, pointBegin.Y + item.Height / 2);
-                pointBegin.Y += item.Height;
+                Bitmap image = new Bitmap(width, height);
+                Graphics graphic = Graphics.FromImage(image);
+                Point pointBegin = new Point(0, 0);
+
+                foreach (var item in array)
+                {
+                    if (item != null)
+                    {
+                        graphic.DrawLine(Pens.Black, pointBegin.X, pointBegin.Y + item.Height / 2, pointBegin.X + (width - item.Width) / 2, pointBegin.Y + item.Height / 2);
+                        graphic.DrawImage(item, pointBegin.X + (width - item.Width) / 2, pointBegin.Y, item.Width, item.Height);
+                        graphic.DrawLine(Pens.Black, pointBegin.X + (width + item.Width) / 2, pointBegin.Y + item.Height / 2, pointBegin.X + width, pointBegin.Y + item.Height / 2);
+                        pointBegin.Y += item.Height; 
+                    }
+                }
+                graphic.DrawLine(Pens.Black, pointBegin.X, pointBegin.Y - array[array.Length - 1].Height / 2, pointBegin.X, pointBegin.Y - height + array[0].Height / 2);
+                graphic.DrawLine(Pens.Black, width - 1, pointBegin.Y - array[array.Length - 1].Height / 2, width - 1, pointBegin.Y - height + array[0].Height / 2);
+                return image;
             }
-            graphic.DrawLine(Pens.Black, pointBegin.X, pointBegin.Y - array[array.Length - 1].Height / 2, pointBegin.X, pointBegin.Y - height + array[0].Height / 2);
-            graphic.DrawLine(Pens.Black, width - 1, pointBegin.Y - array[array.Length - 1].Height / 2, width - 1, pointBegin.Y - height + array[0].Height / 2);
-            return image;
+            else
+            {
+                return null;
+            }
         }
 
-
+        /// <summary>
+        /// Текстовое описание.
+        /// </summary>
         public string Description
         {
             get { return "Параллельное"; }

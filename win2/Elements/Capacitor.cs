@@ -11,8 +11,9 @@
     public class Capacitor : Element
     {
         /// <summary>
-        /// Конструктор элемента.
+        /// 
         /// </summary>
+        /// <param name="parentCircuit">Родительская цепь.</param>
         public Capacitor(ICircuit parentCircuit)
         {
             this.ParentCircuit = parentCircuit;
@@ -34,6 +35,9 @@
             return z;
         }
 
+        /// <summary>
+        /// Текстовое описание.
+        /// </summary>
         public override string Description
         {
             get { return "Конденсатор"; }

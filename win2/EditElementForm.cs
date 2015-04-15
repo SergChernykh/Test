@@ -16,14 +16,20 @@ namespace CircuitCalculation
     /// </summary>
     public partial class EditElementForm : Form
     {
-        //TODO: xml-комментарий?
+        /// <summary>
+        /// Приставка.
+        /// </summary>
         private readonly Dictionary<PrefixType, string> Prefix;
-        //TODO: xml-комментарий?
-        private readonly Dictionary<Type, string> TypeOfElement; ///убрать!
-        //TODO: xml-комментарий?
         
+        /// <summary>
+        /// Элемент.
+        /// </summary>
         private Element _element;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="element">Элемент для редактирования.</param>
         public EditElementForm(Element element)
         {
             InitializeComponent();
@@ -38,11 +44,6 @@ namespace CircuitCalculation
             Prefix.Add(PrefixType.Mili, PrefixType.Mili.ToString());
             Prefix.Add(PrefixType.Micro, PrefixType.Micro.ToString());
             Prefix.Add(PrefixType.Nano, PrefixType.Nano.ToString());
-
-            TypeOfElement = new Dictionary<Type, string>();
-            TypeOfElement.Add(typeof(Capacitor), "Конденсатор, Ф");
-            TypeOfElement.Add(typeof(Resistor), "Резистор, Ом");
-            TypeOfElement.Add(typeof(Inductor), "Катушка, Гн");
 
             foreach (string str in Prefix.Values)
             {
@@ -85,7 +86,7 @@ namespace CircuitCalculation
 
         private void EditOfElement_Load(object sender, EventArgs e)
         {
-            this.Text = TypeOfElement[_element.GetType()];
+            this.Text = _element.Description;
             this.textBoxNameOfElement.Text = this._element.Name;
             this.textBoxValueOfElement.Text = this._element.Value.ToString();
             this.comboBoxPrefix.Text = this.Prefix[PrefixType.Not];

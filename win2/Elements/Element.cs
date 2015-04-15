@@ -80,12 +80,18 @@
         /// <returns>Рассчитанный импеданс.</returns>
         public abstract Complex[] CalculateZ(double[] frequencies);
        
+        /// <summary>
+        /// Получить изображение.
+        /// </summary>
+        /// <returns>Изображение.</returns>
         public Image GetImage()
         {
             return _image;
         }
         
+        /// <summary>
+        /// Текстовое описание.
+        /// </summary>
         public abstract string Description { get; }
-        
     }
 }

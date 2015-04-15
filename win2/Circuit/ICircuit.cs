@@ -33,11 +33,14 @@
         event EventHandler CircuitChanged;
 
         /// <summary>
-        /// 
+        /// Получить изображение.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Изображение.</returns>
         Image GetImage();
 
+        /// <summary>
+        /// Текстовое описание.
+        /// </summary>
         string Description { get; }
     }
 }
